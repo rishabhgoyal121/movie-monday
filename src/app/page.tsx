@@ -24,6 +24,7 @@ const options = {
   },
 };
 export default function Home() {
+  const [loading, setLoading] = useState(true);
   const [upcomingMovies, setUpcomingMovies] = useState([
     {
       adult: false,
@@ -77,6 +78,7 @@ export default function Home() {
       vote_count: 1432,
     },
   ]);
+  const [loadingTopRatedMovies, setLoadingTopRatedMovies] = useState(true);
   const [topRatedMovies, setTopRatedMovies] = useState([
     {
       adult: false,
@@ -130,6 +132,8 @@ export default function Home() {
       vote_count: 368,
     },
   ]);
+  const [loadingMostPopularMovies, setLoadingMostPopularMovies] =
+    useState(true);
   const [mostPopularMovies, setMostPopularMovies] = useState([
     {
       adult: false,
@@ -183,6 +187,7 @@ export default function Home() {
       vote_count: 1553,
     },
   ]);
+  const [loadingNowPlayingMovies, setLoadingNowPlayingMovies] = useState(true);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([
     {
       adult: false,
@@ -243,52 +248,72 @@ export default function Home() {
       .then((res) => {
         console.log(res.data);
         setUpcomingMovies(res.data.results);
+        setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
     axios
       .request({ ...options, url: topRatedMoviesUrl })
       .then((res) => {
         console.log(res.data);
         setTopRatedMovies(res.data.results);
+        setLoadingTopRatedMovies(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoadingTopRatedMovies(false);
+      });
     axios
       .request({ ...options, url: mostPopularMoviesUrl })
       .then((res) => {
         console.log(res.data);
         setMostPopularMovies(res.data.results);
+        setLoadingMostPopularMovies(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoadingMostPopularMovies(false);
+      });
     axios
       .request({ ...options, url: nowPlayingMoviesUrl })
       .then((res) => {
         console.log(res.data);
         setNowPlayingMovies(res.data.results);
+        setLoadingNowPlayingMovies(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoadingNowPlayingMovies(false);
+      });
   }, []);
 
   return (
     <>
       <h2>Upcoming Movies</h2>
+      {loading && <p>Loading...</p>}
       {upcomingMovies.length > 0 &&
         upcomingMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
       <br />
       <h2>Top Rated Movies</h2>
+      {loadingTopRatedMovies && <p>Loading...</p>}
       {topRatedMovies.length > 0 &&
         topRatedMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
       <br />
       <h2>Most Popular Movies</h2>
+      {loadingMostPopularMovies && <p>Loading...</p>}
       {mostPopularMovies.length > 0 &&
         mostPopularMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
       <br />
       <h2>Now Playing Movies</h2>
+      {loadingNowPlayingMovies && <p>Loading...</p>}
       {nowPlayingMovies.length > 0 &&
         nowPlayingMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
