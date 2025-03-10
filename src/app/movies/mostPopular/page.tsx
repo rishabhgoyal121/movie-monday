@@ -13,7 +13,7 @@ const options = {
       "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMDNmN2FiYTM0OTFhYjU4ZTdmNjRlMmMzMTQ1YjA2MSIsIm5iZiI6MTc0MTM1ODYxNy4wNCwic3ViIjoiNjdjYjA2MTk4MWZiYjEyNTM5Y2I2Yzk4Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.cnt2SO-eBt71o4iBF5c26AwHDXwJF4ND5ZhQGaQbnJM",
   },
 };
-export default function Page() {  
+export default function Page() {
   const [loadingMostPopularMovies, setLoadingMostPopularMovies] =
     useState(true);
   const [mostPopularMovies, setMostPopularMovies] = useState([
@@ -40,13 +40,13 @@ export default function Page() {
       genre_ids: [28, 53, 80],
       id: 1126166,
       original_language: "en",
-      original_title: "Flight Risk",
+      title: "Flight Risk",
       overview:
         "A U.S. Marshal escorts a government witness to trial after he's accused of getting involved with a mob boss, only to discover that the pilot who is transporting them is also a hitman sent to assassinate the informant. After they subdue him, they're forced to fly together after discovering that there are others attempting to eliminate them.",
       popularity: 333.328,
       poster_path: "/q0bCG4NX32iIEsRFZqRtuvzNCyZ.jpg",
       release_date: "2025-01-22",
-      title: "Flight Risk",
+      original_title: "Flight Risk",
       video: false,
       vote_average: 6.064,
       vote_count: 414,
@@ -57,13 +57,13 @@ export default function Page() {
       genre_ids: [18, 35, 10749],
       id: 1064213,
       original_language: "en",
-      original_title: "Anora",
+      title: "Anora",
       overview:
         "A young sex worker from Brooklyn gets her chance at a Cinderella story when she meets and impulsively marries the son of an oligarch. Once the news reaches Russia, her fairytale is threatened as his parents set out to get the marriage annulled.",
       popularity: 269.054,
       poster_path: "/qh8m8Udz0sCa5gy9VaqfHPh0yPM.jpg",
       release_date: "2024-10-14",
-      title: "Anora",
+      original_title: "Anora",
       video: false,
       vote_average: 7.1,
       vote_count: 1553,
@@ -92,7 +92,7 @@ export default function Page() {
       {loadingMostPopularMovies && <p>Loading...</p>}
       {mostPopularMovies.length > 0 &&
         mostPopularMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {errorMostPopularMovies && <p>{errorMostPopularMovies}</p>}
     </>

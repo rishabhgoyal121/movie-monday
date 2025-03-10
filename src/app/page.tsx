@@ -49,13 +49,13 @@ export default function Home() {
       genre_ids: [27, 878, 53],
       id: 1084199,
       original_language: "en",
-      original_title: "Companion",
+      title: "Companion",
       overview:
         "During a weekend getaway at a secluded lakeside estate, a group of friends finds themselves entangled in a web of secrets, deception, and advanced technology. As tensions rise and loyalties are tested, they uncover unsettling truths about themselves and the world around them.",
       popularity: 128.04,
       poster_path: "/oCoTgC3UyWGfyQ9thE10ulWR7bn.jpg",
       release_date: "2025-01-22",
-      title: "Companion",
+      original_title: "Companion",
       video: false,
       vote_average: 7,
       vote_count: 710,
@@ -104,13 +104,13 @@ export default function Home() {
       genre_ids: [18, 80],
       id: 238,
       original_language: "en",
-      original_title: "The Godfather",
+      title: "The Godfather",
       overview:
         "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
       popularity: 29.152,
       poster_path: "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
       release_date: "1972-03-14",
-      title: "The Godfather",
+      original_title: "The Godfather",
       video: false,
       vote_average: 8.7,
       vote_count: 21131,
@@ -143,13 +143,13 @@ export default function Home() {
       genre_ids: [10749, 878, 53],
       id: 950396,
       original_language: "en",
-      original_title: "The Gorge",
+      title: "The Gorge",
       overview:
         "Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.",
       popularity: 350.678,
       poster_path: "/7iMBZzVZtG0oBug4TfqDb9ZxAOa.jpg",
       release_date: "2025-02-13",
-      title: "The Gorge",
+      original_title: "The Gorge",
       video: false,
       vote_average: 7.775,
       vote_count: 1765,
@@ -160,13 +160,13 @@ export default function Home() {
       genre_ids: [28, 53, 80],
       id: 1126166,
       original_language: "en",
-      original_title: "Flight Risk",
+      title: "Flight Risk",
       overview:
         "A U.S. Marshal escorts a government witness to trial after he's accused of getting involved with a mob boss, only to discover that the pilot who is transporting them is also a hitman sent to assassinate the informant. After they subdue him, they're forced to fly together after discovering that there are others attempting to eliminate them.",
       popularity: 333.328,
       poster_path: "/q0bCG4NX32iIEsRFZqRtuvzNCyZ.jpg",
       release_date: "2025-01-22",
-      title: "Flight Risk",
+      original_title: "Flight Risk",
       video: false,
       vote_average: 6.064,
       vote_count: 414,
@@ -198,13 +198,13 @@ export default function Home() {
       genre_ids: [10749, 878, 53],
       id: 950396,
       original_language: "en",
-      original_title: "The Gorge",
+      title: "The Gorge",
       overview:
         "Two highly trained operatives grow close from a distance after being sent to guard opposite sides of a mysterious gorge. When an evil below emerges, they must work together to survive what lies within.",
       popularity: 350.678,
       poster_path: "/7iMBZzVZtG0oBug4TfqDb9ZxAOa.jpg",
       release_date: "2025-02-13",
-      title: "The Gorge",
+      original_title: "The Gorge",
       video: false,
       vote_average: 7.778,
       vote_count: 1768,
@@ -215,13 +215,13 @@ export default function Home() {
       genre_ids: [28, 53, 80],
       id: 1126166,
       original_language: "en",
-      original_title: "Flight Risk",
+      title: "Flight Risk",
       overview:
         "A U.S. Marshal escorts a government witness to trial after he's accused of getting involved with a mob boss, only to discover that the pilot who is transporting them is also a hitman sent to assassinate the informant. After they subdue him, they're forced to fly together after discovering that there are others attempting to eliminate them.",
       popularity: 333.328,
       poster_path: "/q0bCG4NX32iIEsRFZqRtuvzNCyZ.jpg",
       release_date: "2025-01-22",
-      title: "Flight Risk",
+      original_title: "Flight Risk",
       video: false,
       vote_average: 6.1,
       vote_count: 414,
@@ -255,7 +255,7 @@ export default function Home() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error('err',err);
+        console.error("err", err);
         setLoading(false);
         setError(err.message);
       });
@@ -303,7 +303,7 @@ export default function Home() {
       {loading && <p>Loading...</p>}
       {upcomingMovies.length > 0 &&
         upcomingMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {error && <p>{error}</p>}
       <br />
@@ -311,7 +311,7 @@ export default function Home() {
       {loadingTopRatedMovies && <p>Loading...</p>}
       {topRatedMovies.length > 0 &&
         topRatedMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
       <br />
@@ -319,7 +319,7 @@ export default function Home() {
       {loadingMostPopularMovies && <p>Loading...</p>}
       {mostPopularMovies.length > 0 &&
         mostPopularMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {errorMostPopularMovies && <p>{errorMostPopularMovies}</p>}
       <br />
@@ -327,7 +327,7 @@ export default function Home() {
       {loadingNowPlayingMovies && <p>Loading...</p>}
       {nowPlayingMovies.length > 0 &&
         nowPlayingMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {errorNowPlayingMovies && <p>{errorNowPlayingMovies}</p>}
     </>

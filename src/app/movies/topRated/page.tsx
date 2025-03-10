@@ -23,13 +23,13 @@ export default function Page() {
       genre_ids: [18, 80],
       id: 278,
       original_language: "en",
-      original_title: "The Shawshank Redemption",
+      title: "The Shawshank Redemption",
       overview:
         "Imprisoned in the 1940s for the double murder of his wife and her lover, upstanding banker Andy Dufresne begins a new life at the Shawshank prison, where he puts his accounting skills to work for an amoral warden. During his long stretch in prison, Dufresne comes to be admired by the other inmates -- including an older prisoner named Red -- for his integrity and unquenchable sense of hope.",
       popularity: 29.053,
       poster_path: "/9cqNxx0GxF0bflZmeSMuL5tnGzr.jpg",
       release_date: "1994-09-23",
-      title: "The Shawshank Redemption",
+      original_title: "The Shawshank Redemption",
       video: false,
       vote_average: 8.708,
       vote_count: 27852,
@@ -40,13 +40,13 @@ export default function Page() {
       genre_ids: [18, 80],
       id: 238,
       original_language: "en",
-      original_title: "The Godfather",
+      title: "The Godfather",
       overview:
         "Spanning the years 1945 to 1955, a chronicle of the fictional Italian-American Corleone crime family. When organized crime family patriarch, Vito Corleone barely survives an attempt on his life, his youngest son, Michael steps in to take care of the would-be killers, launching a campaign of bloody revenge.",
       popularity: 29.152,
       poster_path: "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
       release_date: "1972-03-14",
-      title: "The Godfather",
+      original_title: "The Godfather",
       video: false,
       vote_average: 8.7,
       vote_count: 21131,
@@ -92,7 +92,7 @@ export default function Page() {
       {loadingTopRatedMovies && <p>Loading...</p>}
       {topRatedMovies.length > 0 &&
         topRatedMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
     </>

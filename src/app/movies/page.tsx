@@ -23,13 +23,13 @@ export default function Page() {
       genre_ids: [28, 53, 80],
       id: 1126166,
       original_language: "en",
-      original_title: "Flight Risk",
+      title: "Flight Risk",
       overview:
         "A U.S. Marshal escorts a government witness to trial after he's accused of getting involved with a mob boss, only to discover that the pilot who is transporting them is also a hitman sent to assassinate the informant. After they subdue him, they're forced to fly together after discovering that there are others attempting to eliminate them.",
       popularity: 333.328,
       poster_path: "/q0bCG4NX32iIEsRFZqRtuvzNCyZ.jpg",
       release_date: "2025-01-22",
-      title: "Flight Risk",
+      original_title: "Flight Risk",
       video: false,
       vote_average: 6.1,
       vote_count: 414,
@@ -40,13 +40,13 @@ export default function Page() {
       genre_ids: [27, 878, 53],
       id: 1084199,
       original_language: "en",
-      original_title: "Companion",
+      title: "Companion",
       overview:
         "During a weekend getaway at a secluded lakeside estate, a group of friends finds themselves entangled in a web of secrets, deception, and advanced technology. As tensions rise and loyalties are tested, they uncover unsettling truths about themselves and the world around them.",
       popularity: 128.04,
       poster_path: "/oCoTgC3UyWGfyQ9thE10ulWR7bn.jpg",
       release_date: "2025-01-22",
-      title: "Companion",
+      original_title: "Companion",
       video: false,
       vote_average: 7,
       vote_count: 710,
@@ -92,7 +92,7 @@ export default function Page() {
       {loading && <p>Loading...</p>}
       {upcomingMovies.length > 0 &&
         upcomingMovies.map((movie) => {
-          return <li key={movie.id}>{movie.original_title}</li>;
+          return <li key={movie.id}>{movie.title}</li>;
         })}
       {error && <p>{error}</p>}
     </>
