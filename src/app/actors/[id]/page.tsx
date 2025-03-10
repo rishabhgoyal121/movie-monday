@@ -1,6 +1,5 @@
 "use client";
 import axios from "axios";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const options = {
@@ -60,7 +59,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       {loading && <p>Loading...</p>}
       {!loading && <p>{actorData.name}</p>}
       {!loading && <p>{actorData.biography}</p>}
-      {!loading && <Image src=''/>}
       {error && <p>{error}</p>}
     </>
   );
