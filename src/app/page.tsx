@@ -78,6 +78,7 @@ export default function Home() {
       vote_count: 1432,
     },
   ]);
+  const [error, setError] = useState(null);
   const [loadingTopRatedMovies, setLoadingTopRatedMovies] = useState(true);
   const [topRatedMovies, setTopRatedMovies] = useState([
     {
@@ -132,6 +133,7 @@ export default function Home() {
       vote_count: 368,
     },
   ]);
+  const [errorTopRatedMovies, setErrorTopRatedMovies] = useState(null);
   const [loadingMostPopularMovies, setLoadingMostPopularMovies] =
     useState(true);
   const [mostPopularMovies, setMostPopularMovies] = useState([
@@ -187,6 +189,7 @@ export default function Home() {
       vote_count: 1553,
     },
   ]);
+  const [errorMostPopularMovies, setErrorMostPopularMovies] = useState(null);
   const [loadingNowPlayingMovies, setLoadingNowPlayingMovies] = useState(true);
   const [nowPlayingMovies, setNowPlayingMovies] = useState([
     {
@@ -241,6 +244,7 @@ export default function Home() {
       vote_count: 1554,
     },
   ]);
+  const [errorNowPlayingMovies, setErrorNowPlayingMovies] = useState(null);
 
   useEffect(() => {
     axios
@@ -251,8 +255,9 @@ export default function Home() {
         setLoading(false);
       })
       .catch((err) => {
-        console.error(err);
+        console.error('err',err);
         setLoading(false);
+        setError(err.message);
       });
     axios
       .request({ ...options, url: topRatedMoviesUrl })
@@ -264,6 +269,7 @@ export default function Home() {
       .catch((err) => {
         console.error(err);
         setLoadingTopRatedMovies(false);
+        setErrorTopRatedMovies(err.message);
       });
     axios
       .request({ ...options, url: mostPopularMoviesUrl })
@@ -275,6 +281,7 @@ export default function Home() {
       .catch((err) => {
         console.error(err);
         setLoadingMostPopularMovies(false);
+        setErrorMostPopularMovies(err.message);
       });
     axios
       .request({ ...options, url: nowPlayingMoviesUrl })
@@ -286,6 +293,7 @@ export default function Home() {
       .catch((err) => {
         console.error(err);
         setLoadingNowPlayingMovies(false);
+        setErrorNowPlayingMovies(err.message);
       });
   }, []);
 
@@ -297,6 +305,7 @@ export default function Home() {
         upcomingMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
+      {error && <p>{error}</p>}
       <br />
       <h2>Top Rated Movies</h2>
       {loadingTopRatedMovies && <p>Loading...</p>}
@@ -304,6 +313,7 @@ export default function Home() {
         topRatedMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
+      {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
       <br />
       <h2>Most Popular Movies</h2>
       {loadingMostPopularMovies && <p>Loading...</p>}
@@ -311,6 +321,7 @@ export default function Home() {
         mostPopularMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
+      {errorMostPopularMovies && <p>{errorMostPopularMovies}</p>}
       <br />
       <h2>Now Playing Movies</h2>
       {loadingNowPlayingMovies && <p>Loading...</p>}
@@ -318,6 +329,7 @@ export default function Home() {
         nowPlayingMovies.map((movie) => {
           return <li key={movie.id}>{movie.original_title}</li>;
         })}
+      {errorNowPlayingMovies && <p>{errorNowPlayingMovies}</p>}
     </>
   );
 }
