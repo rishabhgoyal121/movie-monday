@@ -3,6 +3,11 @@ import Banner from "@/components/Banner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+} from "@/components/ui/card";
+import Image from "next/image";
 
 const upcomingMoviesUrl =
   "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
@@ -308,14 +313,26 @@ export default function Home() {
       />
       <h2>Upcoming Movies</h2>
       {loading && <p>Loading...</p>}
-      {upcomingMovies.length > 0 &&
-        upcomingMovies.map((movie) => {
-          return (
-            <li key={movie.id}>
-              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          );
-        })}
+      <div className="flex">
+        {upcomingMovies.length > 0 &&
+          upcomingMovies.map((movie) => {
+            return (
+              <Link href={`/movies/${movie.id}`} key={movie.id}>
+                <Card key={movie.id} className="flex w-40 h-44">
+                  <CardContent>
+                    <Image
+                      src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                      alt={movie.title}
+                      height={160}
+                      width={90}
+                      layout="responsive"
+                    />
+                  </CardContent>
+                </Card>
+              </Link>
+            );
+          })}
+      </div>
       {error && <p>{error}</p>}
       <br />
       <h2>Top Rated Movies</h2>
