@@ -1,4 +1,5 @@
 "use client";
+import Banner from "@/components/Banner";
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -300,6 +301,11 @@ export default function Home() {
 
   return (
     <>
+      <Banner
+        title="Welcome."
+        subtitle="Millions of movies, TV shows and people to discover. Explore now."
+        bannerImageUrl="https://i.ibb.co/Gv3qbkfg/pexels-ron-lach-9807277.jpg"
+      />
       <h2>Upcoming Movies</h2>
       {loading && <p>Loading...</p>}
       {upcomingMovies.length > 0 &&
