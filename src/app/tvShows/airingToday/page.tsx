@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const airingTodayTVShowsUrl =
@@ -90,7 +91,7 @@ export default function Page() {
       {loadingAiringTodayTVShows && <p>Loading...</p>}
       {airingTodayTVShows.length > 0 &&
         airingTodayTVShows.map((tvShow) => {
-          return <li key={tvShow.id}>{tvShow.name}</li>;
+          return <li key={tvShow.id}><Link href={`/tvShows/${tvShow.id}`}>{tvShow.name}</Link></li>;
         })}
       {errorAiringTodayTVShows && <p>{errorAiringTodayTVShows}</p>}
     </>

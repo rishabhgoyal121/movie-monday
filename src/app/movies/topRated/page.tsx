@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const topRatedMoviesUrl =
@@ -92,7 +93,7 @@ export default function Page() {
       {loadingTopRatedMovies && <p>Loading...</p>}
       {topRatedMovies.length > 0 &&
         topRatedMovies.map((movie) => {
-          return <li key={movie.id}>{movie.title}</li>;
+          return <li key={movie.id}><Link href={`/movies/${movie.id}`}>{movie.title}</Link></li>;
         })}
       {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
     </>

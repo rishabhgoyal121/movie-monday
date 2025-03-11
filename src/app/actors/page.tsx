@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const actorsUrl =
@@ -239,7 +240,7 @@ export default function Page() {
       {loading && <p>Loading...</p>}
       {actors.length > 0 &&
         actors.map((actor) => {
-          return <li key={actor.id}>{actor.name}</li>;
+          return <li key={actor.id}><Link href={`/actors/${actor.id}`}>{actor.name}</Link></li>;
         })}
       {error && <p>{error}</p>}
     </>

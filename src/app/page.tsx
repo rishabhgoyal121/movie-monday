@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const upcomingMoviesUrl =
@@ -303,7 +304,11 @@ export default function Home() {
       {loading && <p>Loading...</p>}
       {upcomingMovies.length > 0 &&
         upcomingMovies.map((movie) => {
-          return <li key={movie.id}>{movie.title}</li>;
+          return (
+            <li key={movie.id}>
+              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+            </li>
+          );
         })}
       {error && <p>{error}</p>}
       <br />
@@ -311,7 +316,11 @@ export default function Home() {
       {loadingTopRatedMovies && <p>Loading...</p>}
       {topRatedMovies.length > 0 &&
         topRatedMovies.map((movie) => {
-          return <li key={movie.id}>{movie.title}</li>;
+          return (
+            <li key={movie.id}>
+              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+            </li>
+          );
         })}
       {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
       <br />
@@ -319,7 +328,11 @@ export default function Home() {
       {loadingMostPopularMovies && <p>Loading...</p>}
       {mostPopularMovies.length > 0 &&
         mostPopularMovies.map((movie) => {
-          return <li key={movie.id}>{movie.title}</li>;
+          return (
+            <li key={movie.id}>
+              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+            </li>
+          );
         })}
       {errorMostPopularMovies && <p>{errorMostPopularMovies}</p>}
       <br />
@@ -327,7 +340,11 @@ export default function Home() {
       {loadingNowPlayingMovies && <p>Loading...</p>}
       {nowPlayingMovies.length > 0 &&
         nowPlayingMovies.map((movie) => {
-          return <li key={movie.id}>{movie.title}</li>;
+          return (
+            <li key={movie.id}>
+              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
+            </li>
+          );
         })}
       {errorNowPlayingMovies && <p>{errorNowPlayingMovies}</p>}
     </>

@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const mostPopularTVShowsUrl =
@@ -30,7 +31,7 @@ export default function Page() {
       popularity: 1725.089,
       poster_path: "/lisjDmT2xTykSZxCNvd7E3gQ9AI.jpg",
       first_air_date: "1947-11-06",
-      name: "Meet the Press",
+      original_name: "Meet the Press",
       vote_average: 3.583,
       vote_count: 12,
     },
@@ -46,7 +47,7 @@ export default function Page() {
       popularity: 2461.871,
       poster_path: "/nyN8R0P1Hqwq7ksJz4O2BIAUd4W.jpg",
       first_air_date: "2024-09-30",
-      name: "Volta por Cima",
+      original_name: "Volta por Cima",
       vote_average: 5.5,
       vote_count: 17,
     },
@@ -57,7 +58,7 @@ export default function Page() {
       id: 240909,
       origin_country: ["CO"],
       original_language: "es",
-      name: "La Casa de los Famosos Colombia",
+      original_name: "La Casa de los Famosos Colombia",
       overview: "",
       popularity: 2266.389,
       poster_path: "/xCvZ0H1RiWhU6yFtzRJL3PSI2jF.jpg",
@@ -90,7 +91,11 @@ export default function Page() {
       {loadingMostPopularTVShows && <p>Loading...</p>}
       {mostPopularTVShows.length > 0 &&
         mostPopularTVShows.map((tvShow) => {
-          return <li key={tvShow.id}>{tvShow.name}</li>;
+          return (
+            <li key={tvShow.id}>
+              <Link href={`/tvShows/${tvShow.id}`}>{tvShow.name}</Link>
+            </li>
+          );
         })}
       {errorMostPopularTVShows && <p>{errorMostPopularTVShows}</p>}
     </>

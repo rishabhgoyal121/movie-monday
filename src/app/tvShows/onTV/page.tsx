@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const onTheAirTVShowsUrl =
@@ -29,7 +30,7 @@ export default function Page() {
       popularity: 1725.089,
       poster_path: "/lisjDmT2xTykSZxCNvd7E3gQ9AI.jpg",
       first_air_date: "1947-11-06",
-      name: "Meet the Press",
+      original_name: "Meet the Press",
       vote_average: 3.583,
       vote_count: 12,
     },
@@ -45,7 +46,7 @@ export default function Page() {
       popularity: 2461.871,
       poster_path: "/nyN8R0P1Hqwq7ksJz4O2BIAUd4W.jpg",
       first_air_date: "2024-09-30",
-      name: "Volta por Cima",
+      original_name: "Volta por Cima",
       vote_average: 5.5,
       vote_count: 17,
     },
@@ -61,7 +62,7 @@ export default function Page() {
       popularity: 2266.389,
       poster_path: "/xCvZ0H1RiWhU6yFtzRJL3PSI2jF.jpg",
       first_air_date: "2024-02-11",
-      name: "La Casa de los Famosos Colombia",
+      original_name: "La Casa de los Famosos Colombia",
       vote_average: 6.4,
       vote_count: 28,
     },
@@ -89,7 +90,7 @@ export default function Page() {
       {loadingOnTheAirTVShows && <p>Loading...</p>}
       {onTheAirTVShows.length > 0 &&
         onTheAirTVShows.map((tvShow) => {
-          return <li key={tvShow.id}>{tvShow.name}</li>;
+          return <li key={tvShow.id}><Link href={`/tvShows/${tvShow.id}`}>{tvShow.name}</Link></li>;
         })}
       {errorOnTheAirTVShows && <p>{errorOnTheAirTVShows}</p>}
     </>
