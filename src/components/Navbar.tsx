@@ -1,6 +1,16 @@
 'use client'
 import Link from "next/link";
 import { useState } from "react";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/components/ui/navigation-menu";
+
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -22,29 +32,93 @@ const Navbar: React.FC = () => {
 
           {/* Desktop Menu */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-center space-x-4">
-              <Link href="/" className="px-3 py-2 rounded-md hover:bg-gray-700">
-                Movies
-              </Link>
-              <Link
-                href="/about"
-                className="px-3 py-2 rounded-md hover:bg-gray-700"
-              >
-                TV Shows
-              </Link>
-              <Link
-                href="/services"
-                className="px-3 py-2 rounded-md hover:bg-gray-700"
-              >
-                People
-              </Link>
-              <Link
-                href="/contact"
-                className="px-3 py-2 rounded-md hover:bg-gray-700"
-              >
-                More
-              </Link>
-            </div>
+            <NavigationMenu>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link href="/movies" legacyBehavior passHref>
+                    <NavigationMenuTrigger>Movies</NavigationMenuTrigger>
+                  </Link>
+                  <NavigationMenuContent>
+                    <Link href="/movies" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Upcoming
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/movies/topRated" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Top Rated
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/movies/mostPopular" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Most Popular
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/movies/nowPlaying" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Now Playing
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link href="/tvShows" legacyBehavior passHref>
+                    <NavigationMenuTrigger>TV Shows</NavigationMenuTrigger>
+                  </Link>
+                  <NavigationMenuContent>
+                    <Link href="/tvShows" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Popular
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/tvShows/airingToday" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Airing Today
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/tvShows/onTV" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        On TV
+                      </NavigationMenuLink>
+                    </Link>
+                    <Link href="/tvShows/topRated" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={navigationMenuTriggerStyle()}
+                      >
+                        Top Rated
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link href="/actors" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Actors
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
           </div>
 
           {/* Mobile menu button */}
@@ -88,28 +162,22 @@ const Navbar: React.FC = () => {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
             <Link
-              href="/"
+              href="/movies"
               className="block px-3 py-2 rounded-md hover:bg-gray-700"
             >
               Movies
             </Link>
             <Link
-              href="/about"
+              href="/tvShows"
               className="block px-3 py-2 rounded-md hover:bg-gray-700"
             >
               TV Shows
             </Link>
             <Link
-              href="/services"
+              href="/actors"
               className="block px-3 py-2 rounded-md hover:bg-gray-700"
             >
-              People
-            </Link>
-            <Link
-              href="/contact"
-              className="block px-3 py-2 rounded-md hover:bg-gray-700"
-            >
-              More
+              Actors
             </Link>
           </div>
         </div>

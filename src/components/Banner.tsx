@@ -1,5 +1,5 @@
 import React from "react";
-import { Input } from "./ui/Input";
+import { SearchInput } from "./ui/SearchInput";
 
 interface BannerProps {
   bannerImageUrl?: string;
@@ -20,7 +20,7 @@ const Banner: React.FC<BannerProps> = ({ bannerImageUrl, title, subtitle }) => {
           <h1 className="text-white text-2xl md:text-4xl font-bold">{title}</h1>
           <p className="text-white text-sm md:text-lg mt-2">{subtitle}</p>
           <div className="mt-12">
-            <Input />
+            <SearchInput />
           </div>
         </div>
       </div>
