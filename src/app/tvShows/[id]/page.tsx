@@ -1,5 +1,6 @@
 "use client";
 import axios from "axios";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const options = {
@@ -193,11 +194,44 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     vote_count: 15164,
   });
   const [error, setError] = useState(null);
+  const [loadingCredits, setLoadingCredits] = useState(true);
+  const [tvShowCreditsData, setTvShowCreditsData] = useState([
+    {
+      adult: false,
+      gender: 2,
+      id: 53650,
+      known_for_department: "Acting",
+      name: "Anthony Mackie",
+      original_name: "Anthony Mackie",
+      popularity: 15.695,
+      profile_path: "/eZSIDrtTzhvabyjrmIITQLsjx8h.jpg",
+      cast_id: 3,
+      character: "Sam Wilson / Captain America",
+      credit_id: "60833265126ec3003f25d17b",
+      order: 0,
+    },
+    {
+      adult: false,
+      gender: 2,
+      id: 3,
+      known_for_department: "Acting",
+      name: "Harrison Ford",
+      original_name: "Harrison Ford",
+      popularity: 13.432,
+      profile_path: "/zVnHagUvXkR2StdOtquEwsiwSVt.jpg",
+      cast_id: 18,
+      character: "President Thaddeus Ross",
+      credit_id: "634d8699c175b2007a5adc21",
+      order: 1,
+    },
+  ]);
+  const [errorCredits, setErrorCredits] = useState(null);
 
   useEffect(() => {
     const getProps = async () => {
       const { id } = await params;
-      const tvShowUrl = `https://api.theMoviedb.org/3/tv/${id}?language=en-US`;
+      const tvShowUrl = `https://api.themoviedb.org/3/tv/${id}?language=en-US`;
+      const tvShowsCreditsUrl = `https://api.themoviedb.org/3/tv/${id}/credits?language=en-US`;
       axios
         .request({ ...options, url: tvShowUrl })
         .then((res) => {
@@ -209,6 +243,18 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
           console.error("err", err);
           setLoading(false);
           setError(err.message);
+        });
+      axios
+        .request({ ...options, url: tvShowsCreditsUrl })
+        .then((res) => {
+          console.log(res.data);
+          setTvShowCreditsData(res.data.cast);
+          setLoadingCredits(false);
+        })
+        .catch((err) => {
+          console.error("err", err);
+          setLoadingCredits(false);
+          setErrorCredits(err.message);
         });
       return id;
     };
@@ -223,6 +269,17 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       {!loading && <p>{tvShowData.tagline}</p>}
       {!loading && <p>{tvShowData.overview}</p>}
       {error && <p>{error}</p>}
+      <h2>Credits</h2>
+      {loadingCredits && <p>Loading...</p>}
+      {!loadingCredits &&
+        tvShowCreditsData.map((actor) => {
+          return (
+            <li key={actor.credit_id}>
+              <Link href={`/actors/${actor.id}`}>{actor.name}</Link>
+            </li>
+          );
+        })}
+      {errorCredits && <p>{errorCredits}</p>}
     </>
   );
 }
