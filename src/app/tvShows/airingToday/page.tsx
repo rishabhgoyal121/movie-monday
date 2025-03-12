@@ -2,6 +2,15 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
 const airingTodayTVShowsUrl =
   "https://api.themoviedb.org/3/tv/airing_today?language=en-US&page=1";
@@ -89,10 +98,43 @@ export default function Page() {
     <>
       <h2>Airing Today TV Shows</h2>
       {loadingAiringTodayTVShows && <p>Loading...</p>}
-      {airingTodayTVShows.length > 0 &&
-        airingTodayTVShows.map((tvShow) => {
-          return <li key={tvShow.id}><Link href={`/tvShows/${tvShow.id}`}>{tvShow.name}</Link></li>;
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {airingTodayTVShows.length > 0 &&
+            airingTodayTVShows.map((tvShow) => {
+              return (
+                <CarouselItem
+                  key={tvShow.id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/tvShows/${tvShow.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${tvShow.poster_path}`}
+                            alt={tvShow.name}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {errorAiringTodayTVShows && <p>{errorAiringTodayTVShows}</p>}
     </>
   );
