@@ -4,6 +4,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Slider } from "@/components/ui/slider";
 
 const upcomingMoviesUrl =
   "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
@@ -73,6 +80,9 @@ export default function Page() {
     },
   ]);
   const [error, setError] = useState(null);
+  const [filters, setFilters] = useState({
+    vote_average: 0,
+  });
 
   useEffect(() => {
     axios
@@ -87,14 +97,39 @@ export default function Page() {
         setLoading(false);
         setError(err.message);
       });
-  }, []);
+  });
 
   return (
     <>
       <h2>Upcoming Movies</h2>
       {loading && <p>Loading...</p>}
       <div className="flex">
-        <div className="w-[20vw] border">Filters</div>
+        <div className="w-[20vw] border">
+          Filters
+          <Accordion type="single" collapsible>
+            <AccordionItem value="item-1">
+              <AccordionTrigger>Rating?</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col">
+                  <Slider
+                    defaultValue={[0]}
+                    max={10}
+                    step={1}
+                    className="p-2"
+                    onValueCommit={(value) => {
+                      setFilters((f) => {
+                        return { ...f, vote_average: value[0] };
+                      });
+                    }}
+                  />
+                  <span className="mx-auto text-lg">
+                    {filters.vote_average}
+                  </span>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
         <div className="w-[80vw] flex flex-wrap">
           {upcomingMovies.length > 0 &&
             upcomingMovies.map((movie) => {
