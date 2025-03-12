@@ -2,6 +2,15 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
 const options = {
   method: "GET",
@@ -177,25 +186,85 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       {error && <p>{error}</p>}
       <h2>Movie Credits</h2>
       {loadingMovieCredits && <p>Loading...</p>}
-      {!loadingMovieCredits &&
-        movieCredits.map((movie) => {
-          return (
-            <li key={movie.credit_id}>
-              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          );
-        })}
+      {!loadingMovieCredits && (
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full max-w-[90vw] ml-16 mt-4"
+        >
+          <CarouselPrevious />
+          <CarouselContent className="">
+            {movieCredits.length > 0 &&
+              movieCredits.map((movie) => {
+                return (
+                  <CarouselItem
+                    key={movie.credit_id}
+                    className="md:basis-1/6 lg:basis-1/9"
+                  >
+                    <div className="p-1">
+                      <Card>
+                        <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                          <Link href={`/movies/${movie.id}`}>
+                            <Image
+                              src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                              alt={movie.title}
+                              height={160}
+                              width={90}
+                              layout="responsive"
+                              className="rounded-xl"
+                            />
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+          </CarouselContent>
+          <CarouselNext />
+        </Carousel>
+      )}
       {errorMovieCredits && <p>{errorMovieCredits}</p>}
       <h2>TV Show Credits</h2>
       {loadingTVShowCredits && <p>Loading...</p>}
-      {!loadingTVShowCredits &&
-        TVShowCredits.map((TVShow) => {
-          return (
-            <li key={TVShow.credit_id}>
-              <Link href={`/tvShows/${TVShow.id}`}>{TVShow.name}</Link>
-            </li>
-          );
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {TVShowCredits.length > 0 &&
+            TVShowCredits.map((tvShow) => {
+              return (
+                <CarouselItem
+                  key={tvShow.credit_id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/tvShows/${tvShow.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original/${tvShow.poster_path}`}
+                            alt={tvShow.name}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {errorTVShowCredits && <p>{errorTVShowCredits}</p>}
     </>
   );
