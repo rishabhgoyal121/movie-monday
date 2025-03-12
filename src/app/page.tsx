@@ -358,38 +358,125 @@ export default function Home() {
       <br />
       <h2>Top Rated Movies</h2>
       {loadingTopRatedMovies && <p>Loading...</p>}
-      {topRatedMovies.length > 0 &&
-        topRatedMovies.map((movie) => {
-          return (
-            <li key={movie.id}>
-              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          );
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {topRatedMovies.length > 0 &&
+            topRatedMovies.map((movie) => {
+              return (
+                <CarouselItem
+                  key={movie.id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/movies/${movie.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                            alt={movie.title}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {errorTopRatedMovies && <p>{errorTopRatedMovies}</p>}
       <br />
       <h2>Most Popular Movies</h2>
       {loadingMostPopularMovies && <p>Loading...</p>}
-      {mostPopularMovies.length > 0 &&
-        mostPopularMovies.map((movie) => {
-          return (
-            <li key={movie.id}>
-              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          );
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {mostPopularMovies.length > 0 &&
+            mostPopularMovies.map((movie) => {
+              return (
+                <CarouselItem
+                  key={movie.id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/movies/${movie.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                            alt={movie.title}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {errorMostPopularMovies && <p>{errorMostPopularMovies}</p>}
       <br />
       <h2>Now Playing Movies</h2>
       {loadingNowPlayingMovies && <p>Loading...</p>}
-      {nowPlayingMovies.length > 0 &&
-        nowPlayingMovies.map((movie) => {
-          return (
-            <li key={movie.id}>
-              <Link href={`/movies/${movie.id}`}>{movie.title}</Link>
-            </li>
-          );
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {nowPlayingMovies.length > 0 &&
+            nowPlayingMovies.map((movie) => {
+              return (
+                <CarouselItem
+                  key={movie.id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/movies/${movie.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                            alt={movie.title}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {errorNowPlayingMovies && <p>{errorNowPlayingMovies}</p>}
     </>
   );
