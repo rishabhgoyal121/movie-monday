@@ -3,13 +3,6 @@ import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 
 const upcomingMoviesUrl =
@@ -100,43 +93,32 @@ export default function Page() {
     <>
       <h2>Upcoming Movies</h2>
       {loading && <p>Loading...</p>}
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-[90vw] ml-16 mt-4"
-      >
-        <CarouselPrevious />
-        <CarouselContent className="">
+      <div className="flex">
+        <div className="w-[20vw] border">Filters</div>
+        <div className="w-[80vw] flex flex-wrap">
           {upcomingMovies.length > 0 &&
             upcomingMovies.map((movie) => {
               return (
-                <CarouselItem
-                  key={movie.id}
-                  className="md:basis-1/6 lg:basis-1/9"
-                >
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                        <Link href={`/movies/${movie.id}`}>
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                            alt={movie.title}
-                            height={160}
-                            width={90}
-                            layout="responsive"
-                            className="rounded-xl"
-                          />
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
+                <div className="flex px-2 py-8 w-44" key={movie.id}>
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                      <Link href={`/movies/${movie.id}`}>
+                        <Image
+                          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                          alt={movie.title}
+                          height={160}
+                          width={90}
+                          layout="responsive"
+                          className="rounded-xl"
+                        />
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
-        </CarouselContent>
-        <CarouselNext />
-      </Carousel>
+        </div>
+      </div>
       {error && <p>{error}</p>}
     </>
   );
