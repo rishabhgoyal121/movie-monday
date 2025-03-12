@@ -2,6 +2,15 @@
 import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { Card, CardContent } from "@/components/ui/card";
 
 const actorsUrl =
   "https://api.themoviedb.org/3/person/popular?language=en-US&page=1";
@@ -238,10 +247,43 @@ export default function Page() {
     <>
       <h2>Actors</h2>
       {loading && <p>Loading...</p>}
-      {actors.length > 0 &&
-        actors.map((actor) => {
-          return <li key={actor.id}><Link href={`/actors/${actor.id}`}>{actor.name}</Link></li>;
-        })}
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-[90vw] ml-16 mt-4"
+      >
+        <CarouselPrevious />
+        <CarouselContent className="">
+          {actors.length > 0 &&
+            actors.map((actor) => {
+              return (
+                <CarouselItem
+                  key={actor.id}
+                  className="md:basis-1/6 lg:basis-1/9"
+                >
+                  <div className="p-1">
+                    <Card>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <Link href={`/actors/${actor.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${actor.profile_path}`}
+                            alt={actor.name}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </CarouselItem>
+              );
+            })}
+        </CarouselContent>
+        <CarouselNext />
+      </Carousel>
       {error && <p>{error}</p>}
     </>
   );
