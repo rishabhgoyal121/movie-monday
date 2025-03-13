@@ -1,5 +1,5 @@
 import { instance } from "@/services/axiosInstance";
-import type { Movie, MovieDetails } from "@/interfaces/movies";
+import type { Movie, MovieDetails, MovieCredit } from "@/interfaces/movies";
 import axios from "axios";
 
 interface MovieApiResponse {
@@ -51,4 +51,33 @@ const fetchMovieDetails = async (
   }
 };
 
-export { fetchMovies, fetchMovieDetails };
+interface MovieCreditsApiResponse {
+  results: MovieCredit[]; // The API returns a results array
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+interface FetchMovieCreditsResponse {
+  data?: MovieCreditsApiResponse;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchMovieCredits = async (
+  movieId: string = "278"
+): Promise<FetchMovieCreditsResponse> => {
+  try {
+    const response = await instance.get<MovieCreditsApiResponse>(
+      `movie/${movieId}/credits?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err) ? err.message : "Error in fetching movie credits",
+    };
+  }
+};
+
+export { fetchMovies, fetchMovieDetails, fetchMovieCredits };
