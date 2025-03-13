@@ -1,5 +1,5 @@
 import { instance } from "@/services/axiosInstance";
-import type { TVShow } from "@/interfaces/tvShows";
+import type { TVShow, TVShowDetails, TVShowCredit } from "@/interfaces/tvShows";
 import axios from "axios";
 
 interface TVShowApiResponse {
@@ -29,4 +29,59 @@ const fetchTVShows = async (tvShowListType: string = 'upcoming', pageNumber:numb
   }
 };
 
-export { fetchTVShows };
+interface FetchTVShowDetailsResponse {
+  data?: TVShowDetails;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchTVShowDetails = async (
+  tvShowId: string = "1396"
+): Promise<FetchTVShowDetailsResponse> => {
+  try {
+    const response = await instance.get<TVShowDetails>(
+      `/tv/${tvShowId}?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching TV Show details",
+    };
+  }
+};
+
+interface TVShowCreditsApiResponse {
+  cast: TVShowCredit[]; // The API returns a results array
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+interface FetchTVShowCreditsResponse {
+  data?: TVShowCreditsApiResponse;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchTVShowCredits = async (
+  tvShowId: string = "278"
+): Promise<FetchTVShowCreditsResponse> => {
+  try {
+    const response = await instance.get<TVShowCreditsApiResponse>(
+      `tv/${tvShowId}/credits?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching TV Show credits",
+    };
+  }
+};
+
+export { fetchTVShows, fetchTVShowDetails, fetchTVShowCredits };
