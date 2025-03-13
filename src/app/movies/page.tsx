@@ -1,142 +1,147 @@
 "use client";
-import axios from "axios";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Slider } from "@/components/ui/slider";
+import { DatePickerWithRange } from "@/components/DateRangePicker";
+import { DateRange } from "react-day-picker";
+import type { Movie } from "@/interfaces/movies";
+import { fetchMovies } from "@/api/movies/movies.api";
 
-const upcomingMoviesUrl =
-  "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
-
-const options = {
-  method: "GET",
-  url: upcomingMoviesUrl,
-  headers: {
-    accept: "application/json",
-    Authorization:
-      "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJjMDNmN2FiYTM0OTFhYjU4ZTdmNjRlMmMzMTQ1YjA2MSIsIm5iZiI6MTc0MTM1ODYxNy4wNCwic3ViIjoiNjdjYjA2MTk4MWZiYjEyNTM5Y2I2Yzk4Iiwic2NvcGVzIjpbImFwaV9yZWFkIl0sInZlcnNpb24iOjF9.cnt2SO-eBt71o4iBF5c26AwHDXwJF4ND5ZhQGaQbnJM",
-  },
-};
 export default function Page() {
   const [loading, setLoading] = useState(true);
-  const [upcomingMovies, setUpcomingMovies] = useState([
-    {
-      adult: false,
-      backdrop_path: "/ek8CJRZchT9YIB4p7ktEjPXuCIi.jpg",
-      genre_ids: [28, 53, 80],
-      id: 1126166,
-      original_language: "en",
-      title: "Flight Risk",
-      overview:
-        "A U.S. Marshal escorts a government witness to trial after he's accused of getting involved with a mob boss, only to discover that the pilot who is transporting them is also a hitman sent to assassinate the informant. After they subdue him, they're forced to fly together after discovering that there are others attempting to eliminate them.",
-      popularity: 333.328,
-      poster_path: "/q0bCG4NX32iIEsRFZqRtuvzNCyZ.jpg",
-      release_date: "2025-01-22",
-      original_title: "Flight Risk",
-      video: false,
-      vote_average: 6.1,
-      vote_count: 414,
-    },
-    {
-      adult: false,
-      backdrop_path: "/sc1abgWNXc29wSBaerrjGBih06l.jpg",
-      genre_ids: [27, 878, 53],
-      id: 1084199,
-      original_language: "en",
-      title: "Companion",
-      overview:
-        "During a weekend getaway at a secluded lakeside estate, a group of friends finds themselves entangled in a web of secrets, deception, and advanced technology. As tensions rise and loyalties are tested, they uncover unsettling truths about themselves and the world around them.",
-      popularity: 128.04,
-      poster_path: "/oCoTgC3UyWGfyQ9thE10ulWR7bn.jpg",
-      release_date: "2025-01-22",
-      original_title: "Companion",
-      video: false,
-      vote_average: 7,
-      vote_count: 710,
-    },
-    {
-      adult: false,
-      backdrop_path: "/b3mdmjYTEL70j7nuXATUAD9qgu4.jpg",
-      genre_ids: [16, 14, 12],
-      id: 823219,
-      original_language: "lv",
-      original_title: "Straume",
-      overview:
-        "A solitary cat, displaced by a great flood, finds refuge on a boat with various species and must navigate the challenges of adapting to a transformed world together.",
-      popularity: 173.824,
-      poster_path: "/imKSymKBK7o73sajciEmndJoVkR.jpg",
-      release_date: "2024-08-29",
-      title: "Flow",
-      video: false,
-      vote_average: 8.3,
-      vote_count: 1432,
-    },
-  ]);
-  const [error, setError] = useState(null);
+  const [upcomingMovies, setUpcomingMovies] = useState<Movie[] | null>([]);
+  const [filteredUpcomingMovies, setFilteredUpcomingMovies] = useState<
+    Movie[] | null | undefined
+  >([]);
+  const [error, setError] = useState<string | null>(null);
+  const [filters, setFilters] = useState({
+    vote_average: 0,
+    release_date: undefined as DateRange | undefined,
+  });
 
+  // effect for fetching data when component initially renders
   useEffect(() => {
-    axios
-      .request(options)
-      .then((res) => {
-        console.log(res.data);
-        setUpcomingMovies(res.data.results);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("err", err);
-        setLoading(false);
-        setError(err.message);
-      });
+    const loadMovies = async () => {
+      setLoading(true); // Ensure loading starts
+
+      const { data, error, message } = await fetchMovies("upcoming", 1); // Await the async function
+
+      if (data && data.results.length > 0) {
+        setUpcomingMovies(data.results); // Ensure accessing `results` array
+      }
+
+      if (error && message) {
+        setError(message);
+      }
+
+      setLoading(false); // End loading
+    };
+    loadMovies();
   }, []);
+
+  // effect for filtering data when filter value changes
+  useEffect(() => {
+    const ratingFilteredUpcomingMovies = upcomingMovies?.filter((movie) => {
+      return movie.vote_average > filters.vote_average;
+    });
+    const fromReleaseDateFilteredMovies = ratingFilteredUpcomingMovies?.filter(
+      (movie) => {
+        if (filters.release_date?.from) {
+          const movieReleaseDate = new Date(movie.release_date);
+          return movieReleaseDate > filters.release_date?.from;
+        }
+        return true;
+      }
+    );
+    const toReleaseDateFilteredMovies = fromReleaseDateFilteredMovies?.filter(
+      (movie) => {
+        if (filters.release_date?.to) {
+          const movieReleaseDate = new Date(movie.release_date);
+          return movieReleaseDate < filters.release_date?.to;
+        }
+        return true;
+      }
+    );
+    setFilteredUpcomingMovies(toReleaseDateFilteredMovies);
+  }, [filters, upcomingMovies]);
 
   return (
     <>
       <h2>Upcoming Movies</h2>
       {loading && <p>Loading...</p>}
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-[90vw] ml-16 mt-4"
-      >
-        <CarouselPrevious />
-        <CarouselContent className="">
-          {upcomingMovies.length > 0 &&
-            upcomingMovies.map((movie) => {
+      <div className="grid grid-cols-[1fr_4fr]">
+        <div className="border">
+          <span>Filters</span>
+          <Accordion type="single" collapsible>
+            <AccordionItem value="rating">
+              <AccordionTrigger>Rating?</AccordionTrigger>
+              <AccordionContent>
+                <div className="flex flex-col">
+                  <Slider
+                    defaultValue={[0]}
+                    max={10}
+                    step={1}
+                    className="p-2"
+                    onValueCommit={(value) => {
+                      setFilters((f) => {
+                        return { ...f, vote_average: value[0] };
+                      });
+                    }}
+                  />
+                  <span className="mx-auto text-lg">
+                    {filters.vote_average}
+                  </span>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="release-date">
+              <AccordionTrigger>Release Date?</AccordionTrigger>
+              <AccordionContent>
+                <DatePickerWithRange
+                  date={filters.release_date}
+                  setDate={(d) => {
+                    setFilters((f) => {
+                      return { ...f, release_date: d };
+                    });
+                  }}
+                />
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </div>
+        <div className="flex flex-wrap mx-8">
+          {filteredUpcomingMovies &&
+            filteredUpcomingMovies.length > 0 &&
+            filteredUpcomingMovies?.map((movie) => {
               return (
-                <CarouselItem
-                  key={movie.id}
-                  className="md:basis-1/6 lg:basis-1/9"
-                >
-                  <div className="p-1">
-                    <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                        <Link href={`/movies/${movie.id}`}>
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                            alt={movie.title}
-                            height={160}
-                            width={90}
-                            layout="responsive"
-                            className="rounded-xl"
-                          />
-                        </Link>
-                      </CardContent>
-                    </Card>
-                  </div>
-                </CarouselItem>
+                <div className="flex px-2 py-8 w-44" key={movie.id}>
+                  <Card>
+                    <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                      <Link href={`/movies/${movie.id}`}>
+                        <Image
+                          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                          alt={movie.title}
+                          height={160}
+                          width={90}
+                          layout="responsive"
+                          className="rounded-xl"
+                        />
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </div>
               );
             })}
-        </CarouselContent>
-        <CarouselNext />
-      </Carousel>
+        </div>
+      </div>
       {error && <p>{error}</p>}
     </>
   );
