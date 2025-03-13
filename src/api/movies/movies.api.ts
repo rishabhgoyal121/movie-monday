@@ -52,7 +52,7 @@ const fetchMovieDetails = async (
 };
 
 interface MovieCreditsApiResponse {
-  results: MovieCredit[]; // The API returns a results array
+  cast: MovieCredit[]; // The API returns a results array
   page: number;
   total_pages: number;
   total_results: number;

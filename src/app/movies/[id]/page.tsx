@@ -49,7 +49,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
         const { data, error, message } = await fetchMovieCredits(id); // Await the async function
 
-        setMovieCreditsData(data?.results);
+        setMovieCreditsData(data?.cast);
 
         if (error && message) {
           setErrorCredits(message);
