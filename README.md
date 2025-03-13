@@ -1,6 +1,9 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# To do
+## 1.SOLID - apply
+## 2.Identify repeating patterns - abstract
+3. Tanstack table
 
 First, run the development server:
 
