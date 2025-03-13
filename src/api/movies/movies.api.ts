@@ -15,10 +15,10 @@ interface FetchMoviesResponse {
   message?: string;
 }
 
-const fetchMovies = async (): Promise<FetchMoviesResponse> => {
+const fetchMovies = async (movieListType: string = 'upcoming', pageNumber:number=1): Promise<FetchMoviesResponse> => {
   try {
     const response = await instance.get<MovieApiResponse>(
-      "/movie/upcoming?language=en-US&page=1"
+      `/movie/${movieListType}?language=en-US&page=${pageNumber}`
     );
     return { data: response.data }; // Ensure it matches the `FetchMoviesResponse` structure
   } catch (err) {

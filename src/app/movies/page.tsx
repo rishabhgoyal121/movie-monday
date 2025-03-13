@@ -32,7 +32,7 @@ export default function Page() {
     const loadMovies = async () => {
       setLoading(true); // Ensure loading starts
 
-      const { data, error, message } = await fetchMovies(); // Await the async function
+      const { data, error, message } = await fetchMovies("upcoming", 1); // Await the async function
 
       if (data && data.results.length > 0) {
         setUpcomingMovies(data.results); // Ensure accessing `results` array
@@ -44,8 +44,7 @@ export default function Page() {
 
       setLoading(false); // End loading
     };
-
-    loadMovies(); // Call the async function
+    loadMovies();
   }, []);
 
   // effect for filtering data when filter value changes
@@ -53,7 +52,6 @@ export default function Page() {
     const ratingFilteredUpcomingMovies = upcomingMovies?.filter((movie) => {
       return movie.vote_average > filters.vote_average;
     });
-
     const fromReleaseDateFilteredMovies = ratingFilteredUpcomingMovies?.filter(
       (movie) => {
         if (filters.release_date?.from) {
@@ -63,7 +61,6 @@ export default function Page() {
         return true;
       }
     );
-
     const toReleaseDateFilteredMovies = fromReleaseDateFilteredMovies?.filter(
       (movie) => {
         if (filters.release_date?.to) {
@@ -73,8 +70,6 @@ export default function Page() {
         return true;
       }
     );
-    console.log("filters", filters);
-
     setFilteredUpcomingMovies(toReleaseDateFilteredMovies);
   }, [filters, upcomingMovies]);
 
