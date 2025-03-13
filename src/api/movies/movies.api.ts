@@ -1,5 +1,5 @@
 import { instance } from "@/services/axiosInstance";
-import type { Movie } from "@/interfaces/movies";
+import type { Movie, MovieDetails } from "@/interfaces/movies";
 import axios from "axios";
 
 interface MovieApiResponse {
@@ -29,4 +29,26 @@ const fetchMovies = async (movieListType: string = 'upcoming', pageNumber:number
   }
 };
 
-export { fetchMovies };
+interface FetchMovieDetailsResponse {
+  data?: MovieDetails;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchMovieDetails = async (
+  movieId: string = '278',
+): Promise<FetchMovieDetailsResponse> => {
+  try {
+    const response = await instance.get<MovieDetails>(
+      `/movie/${movieId}?language=en-US`
+    );
+    return { data: response.data }; 
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err) ? err.message : "Error in fetching movie details",
+    };
+  }
+};
+
+export { fetchMovies, fetchMovieDetails };
