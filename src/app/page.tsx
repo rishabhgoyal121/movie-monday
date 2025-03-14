@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { LocalStorageService } from "@/services/local-storage-service";
 
 const upcomingMoviesUrl =
   "https://api.themoviedb.org/3/movie/upcoming?language=en-US&page=1";
@@ -258,6 +259,10 @@ export default function Home() {
   const [errorNowPlayingMovies, setErrorNowPlayingMovies] = useState(null);
 
   useEffect(() => {
+    // set bearer token in local storage on initial load
+    // doing this for now as we do not have a login api to get access token.
+    LocalStorageService.set("Bearer", process.env.NEXT_PUBLIC_ACCESS_TOKEN);
+
     axios
       .request(options)
       .then((res) => {

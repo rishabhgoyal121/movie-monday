@@ -51,7 +51,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
         const { data, error, message } = await fetchActorCreditMovies(id); // Await the async function
 
-        setMovieCredits(data?.results);
+        setMovieCredits(data?.cast);
 
         if (error && message) {
           setErrorMovieCredits(message);
@@ -65,7 +65,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
         const { data, error, message } = await fetchActorCreditTVShows(id); // Await the async function
 
-        setTVShowCredits(data?.results);
+        setTVShowCredits(data?.cast);
 
         if (error && message) {
           setErrorTVShowCredits(message);
