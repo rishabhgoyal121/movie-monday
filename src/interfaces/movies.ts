@@ -1,3 +1,4 @@
+// interface for a movie item on movie list page
 export type Movie = {
   adult: boolean;
   backdrop_path: string;
@@ -38,6 +39,7 @@ interface SpokenLanguage {
   name: string;
 }
 
+// interface for data item on movie detail page
 export interface MovieDetails {
   adult: boolean;
   backdrop_path: string | null;
@@ -67,6 +69,7 @@ export interface MovieDetails {
   vote_count: number;
 }
 
+// interface for movie credit item i.e. a cast person
 export interface MovieCredit {
   adult: boolean;
   gender: number;
