@@ -1,6 +1,7 @@
 import axios from "axios";
+import { LocalStorageService } from "./local-storage-service";
 
-const authToken = process.env.ACCESS_TOKEN;
+const authToken = LocalStorageService.get('Bearer');
 const baseURL = "https://api.themoviedb.org/3";
 const Authorization = `Bearer ${authToken}`;
 
