@@ -1,5 +1,5 @@
 import { instance } from "@/services/axiosInstance";
-import type { Actor } from "@/interfaces/actors";
+import type { Actor, ActorDetails, ActorCreditMovie, ActorCreditTVShow } from "@/interfaces/actors";
 import axios from "axios";
 
 interface ActorApiResponse {
@@ -15,7 +15,9 @@ interface FetchActorsResponse {
   message?: string;
 }
 
-const fetchActors = async (pageNumber:number=1): Promise<FetchActorsResponse> => {
+const fetchActors = async (
+  pageNumber: number = 1
+): Promise<FetchActorsResponse> => {
   try {
     const response = await instance.get<ActorApiResponse>(
       `/person/popular?language=en-US&page=${pageNumber}`
@@ -24,9 +26,97 @@ const fetchActors = async (pageNumber:number=1): Promise<FetchActorsResponse> =>
   } catch (err) {
     return {
       error: true,
-      message: axios.isAxiosError(err) ? err.message : "Error in fetching actors list",
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching actors list",
     };
   }
 };
 
-export { fetchActors };
+interface FetchActorDetailsResponse {
+  data?: ActorDetails;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchActorDetails = async (
+  actorId: string = "976"
+): Promise<FetchActorDetailsResponse> => {
+  try {
+    const response = await instance.get<ActorDetails>(
+      `/people/${actorId}?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching actor details",
+    };
+  }
+};
+
+interface ActorCreditMoviesApiResponse {
+  results: ActorCreditMovie[]; // The API returns a results array
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+interface FetchActorCreditMoviesResponse {
+  data?: ActorCreditMoviesApiResponse;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchActorCreditMovies = async (
+  actorId: string = "978"
+): Promise<FetchActorCreditMoviesResponse> => {
+  try {
+    const response = await instance.get<ActorCreditMoviesApiResponse>(
+      `people/${actorId}/movie_credits?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching actor credit movies",
+    };
+  }
+};
+
+interface ActorCreditTVShowsApiResponse {
+  results: ActorCreditTVShow[]; // The API returns a results array
+  page: number;
+  total_pages: number;
+  total_results: number;
+}
+
+interface FetchActorCreditTVShowsResponse {
+  data?: ActorCreditTVShowsApiResponse;
+  error?: boolean;
+  message?: string;
+}
+
+const fetchActorCreditTVShows = async (
+  actorId: string = "978"
+): Promise<FetchActorCreditTVShowsResponse> => {
+  try {
+    const response = await instance.get<ActorCreditTVShowsApiResponse>(
+      `people/${actorId}/tv_credits?language=en-US`
+    );
+    return { data: response.data };
+  } catch (err) {
+    return {
+      error: true,
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching actor credit tv shows",
+    };
+  }
+};
+
+export { fetchActors, fetchActorDetails, fetchActorCreditMovies, fetchActorCreditTVShows };
