@@ -44,7 +44,7 @@ const fetchActorDetails = async (
 ): Promise<FetchActorDetailsResponse> => {
   try {
     const response = await instance.get<ActorDetails>(
-      `/people/${actorId}?language=en-US`
+      `/person/${actorId}?language=en-US`
     );
     return { data: response.data };
   } catch (err) {
@@ -58,7 +58,7 @@ const fetchActorDetails = async (
 };
 
 interface ActorCreditMoviesApiResponse {
-  results: ActorCreditMovie[]; // The API returns a results array
+  cast: ActorCreditMovie[]; // The API returns a results array
   page: number;
   total_pages: number;
   total_results: number;
@@ -75,7 +75,7 @@ const fetchActorCreditMovies = async (
 ): Promise<FetchActorCreditMoviesResponse> => {
   try {
     const response = await instance.get<ActorCreditMoviesApiResponse>(
-      `people/${actorId}/movie_credits?language=en-US`
+      `person/${actorId}/movie_credits?language=en-US`
     );
     return { data: response.data };
   } catch (err) {
@@ -89,7 +89,7 @@ const fetchActorCreditMovies = async (
 };
 
 interface ActorCreditTVShowsApiResponse {
-  results: ActorCreditTVShow[]; // The API returns a results array
+  cast: ActorCreditTVShow[]; // The API returns a results array
   page: number;
   total_pages: number;
   total_results: number;
@@ -106,7 +106,7 @@ const fetchActorCreditTVShows = async (
 ): Promise<FetchActorCreditTVShowsResponse> => {
   try {
     const response = await instance.get<ActorCreditTVShowsApiResponse>(
-      `people/${actorId}/tv_credits?language=en-US`
+      `person/${actorId}/tv_credits?language=en-US`
     );
     return { data: response.data };
   } catch (err) {
