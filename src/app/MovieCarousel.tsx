@@ -10,7 +10,11 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { Movie } from "@/interfaces/movies";
 
-export default function MovieCarousel({ movieList }: { movieList: Movie[]|null|undefined }) {
+export default function MovieCarousel({
+  movieList,
+}: {
+  movieList: Movie[] | null | undefined;
+}) {
   return (
     <Carousel
       opts={{
@@ -30,8 +34,8 @@ export default function MovieCarousel({ movieList }: { movieList: Movie[]|null|u
               >
                 <div className="p-1">
                   <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                      <Link href={`/movies/${movie.id}`}>
+                    <Link href={`/movies/${movie.id}`}>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
                         {movie.poster_path ? (
                           <Image
                             src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
@@ -42,10 +46,12 @@ export default function MovieCarousel({ movieList }: { movieList: Movie[]|null|u
                             className="rounded-xl"
                           />
                         ) : (
-                          <p>{movie.title}</p>
+                          <p className="text-center font-semibold">
+                            {movie.title}
+                          </p>
                         )}
-                      </Link>
-                    </CardContent>
+                      </CardContent>
+                    </Link>
                   </Card>
                 </div>
               </CarouselItem>
