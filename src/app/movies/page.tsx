@@ -55,112 +55,141 @@ export default function Page() {
   // effect for filtering data when filter value changes
   useEffect(() => {
     const ratingFilteredUpcomingMovies = upcomingMovies?.filter((movie) => {
-      return movie.vote_average > filters.vote_average;
+      return movie.vote_average >= filters.vote_average;
     });
-    const fromReleaseDateFilteredMovies = ratingFilteredUpcomingMovies?.filter(
-      (movie) => {
-        if (filters.release_date?.from) {
-          const movieReleaseDate = new Date(movie.release_date);
-          return movieReleaseDate > filters.release_date?.from;
-        }
-        return true;
-      }
-    );
-    const toReleaseDateFilteredMovies = fromReleaseDateFilteredMovies?.filter(
-      (movie) => {
-        if (filters.release_date?.to) {
-          const movieReleaseDate = new Date(movie.release_date);
-          return movieReleaseDate < filters.release_date?.to;
-        }
-        return true;
-      }
-    );
+    const fromReleaseDateFilteredMovies =
+      filters.release_date && filters.release_date.from
+        ? ratingFilteredUpcomingMovies?.filter((movie) => {
+            if (filters.release_date?.from) {
+              const movieReleaseDate = new Date(movie.release_date);
+              return movieReleaseDate >= filters.release_date?.from;
+            }
+            return true;
+          })
+        : ratingFilteredUpcomingMovies;
+    const toReleaseDateFilteredMovies =
+      filters.release_date && filters.release_date.to
+        ? fromReleaseDateFilteredMovies?.filter((movie) => {
+            if (filters.release_date?.to) {
+              const movieReleaseDate = new Date(movie.release_date);
+              return movieReleaseDate <= filters.release_date?.to;
+            }
+            return true;
+          })
+        : fromReleaseDateFilteredMovies;
     setFilteredUpcomingMovies(toReleaseDateFilteredMovies);
   }, [filters, upcomingMovies]);
 
   return (
     <>
-      <h2>Upcoming Movies</h2>
+      <h2 className="px-2 font-bold text-lg mb-2 mt-4">Upcoming Movies</h2>
+
       {loading && <p>Loading...</p>}
-      <div className="grid grid-cols-[1fr_4fr]">
-        <div className="border">
-          <span>Filters</span>
-          <Accordion type="single" collapsible>
-            <AccordionItem value="rating">
-              <AccordionTrigger>Rating?</AccordionTrigger>
-              <AccordionContent>
-                <div className="flex flex-col">
-                  <Slider
-                    defaultValue={[0]}
-                    max={10}
-                    step={1}
-                    className="p-2"
-                    onValueCommit={(value) => {
-                      setFilters((f) => {
-                        return { ...f, vote_average: value[0] };
-                      });
-                    }}
-                  />
-                  <span className="mx-auto text-lg">
-                    {filters.vote_average}
-                  </span>
-                </div>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="release-date">
-              <AccordionTrigger>Release Date?</AccordionTrigger>
-              <AccordionContent>
-                <DatePickerWithRange
-                  date={filters.release_date}
-                  setDate={(d) => {
-                    setFilters((f) => {
-                      return { ...f, release_date: d };
-                    });
-                  }}
-                />
-              </AccordionContent>
-            </AccordionItem>
-          </Accordion>
-        </div>
-        <div className="flex flex-wrap mx-8">
-          <Switch
-            checked={isListDisplayModeEnabled}
-            onCheckedChange={() => {
-              setIsListDisplayModeEnabled(!isListDisplayModeEnabled);
-            }}
-            name="List display"
-          />
-          <span>List mode</span>
-          {isListDisplayModeEnabled ? (
-            <DataTable columns={columns} data={upcomingMovies} />
-          ) : (
-            filteredUpcomingMovies &&
-            filteredUpcomingMovies.length > 0 &&
-            filteredUpcomingMovies?.map((movie) => {
-              return (
-                <div className="flex px-2 py-8 w-44" key={movie.id}>
-                  <Card>
-                    <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                      {movie.poster_path && (
-                        <Link href={`/movies/${movie.id}`}>
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                            alt={movie.title}
-                            height={160}
-                            width={90}
-                            layout="responsive"
-                            className="rounded-xl"
+      {!loading && (
+        <div className="flex flex-col">
+          <div className="flex items-center px-2 h-12 font-semibold border w-[20vw]">
+            <span>Cards mode</span>
+            <Switch
+              checked={isListDisplayModeEnabled}
+              onCheckedChange={() => {
+                setIsListDisplayModeEnabled(!isListDisplayModeEnabled);
+              }}
+              name="List display"
+              className="mx-2"
+            />
+            <span>List mode</span>
+          </div>
+          <div className="grid grid-cols-[1fr_4fr]">
+            <div
+              className={`${
+                isListDisplayModeEnabled
+                  ? "p-2 w-[20vw]"
+                  : "border p-2 w-[20vw]"
+              }`}
+            >
+              {!isListDisplayModeEnabled && (
+                <div>
+                  <p className="text-lg underline font-semibold">Filters</p>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="rating">
+                      <AccordionTrigger>Minimum Rating?</AccordionTrigger>
+                      <AccordionContent>
+                        <div className="flex flex-col">
+                          <Slider
+                            defaultValue={[0]}
+                            max={10}
+                            step={1}
+                            className="p-2"
+                            onValueCommit={(value) => {
+                              setFilters((f) => {
+                                return { ...f, vote_average: value[0] };
+                              });
+                            }}
                           />
-                        </Link>
-                      )}
-                    </CardContent>
-                  </Card>
+                          <span className="mx-auto text-lg">
+                            {filters.vote_average}
+                          </span>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                    <AccordionItem value="release-date">
+                      <AccordionTrigger>Release Date?</AccordionTrigger>
+                      <AccordionContent>
+                        <DatePickerWithRange
+                          date={filters.release_date}
+                          setDate={(d) => {
+                            setFilters((f) => {
+                              return { ...f, release_date: d };
+                            });
+                          }}
+                        />
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
-              );
-            })
-          )}
+              )}
+            </div>
+
+            <div>
+              {isListDisplayModeEnabled ? (
+                <div className="mt-[-6.6rem] px-4 w-[80vw] max-w-250 font-semibold">
+                  <DataTable columns={columns} data={upcomingMovies} />
+                </div>
+              ) : (
+                <div className="flex px-2 flex-wrap mx-8 gap-8">
+                  {filteredUpcomingMovies &&
+                    filteredUpcomingMovies.length > 0 &&
+                    filteredUpcomingMovies?.map((movie) => {
+                      return (
+                        <Card key={movie.id} className="w-44">
+                          <Link href={`/movies/${movie.id}`}>
+                            <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                              {movie.poster_path ? (
+                                <Image
+                                  src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                                  alt={movie.title}
+                                  height={160}
+                                  width={90}
+                                  layout="responsive"
+                                  className="rounded-xl"
+                                />
+                              ) : (
+                                <p className="text-center font-semibold">
+                                  {movie.title}
+                                </p>
+                              )}
+                            </CardContent>
+                          </Link>
+                        </Card>
+                      );
+                    })}
+                </div>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
+      )}
+
       {error && <p>{error}</p>}
     </>
   );
