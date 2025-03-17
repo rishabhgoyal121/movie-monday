@@ -13,11 +13,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DataTableColumnHeader } from "@/components/ui/data-table-column-header";
 
 export const columns: ColumnDef<Movie>[] = [
   {
     accessorKey: "title",
-    header: "Title",
+    // header: "Title",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Title" />
+    ),
     cell: (row) => {
       const title = row.getValue() as string;
       return (
@@ -33,38 +37,48 @@ export const columns: ColumnDef<Movie>[] = [
     accessorKey: "poster_path",
     header: "Poster",
     cell: (row) => {
-      const poster_path = row.getValue();
+      const poster_path = row.getValue() as string;
       return (
         <div className="w-36">
-          <Link href={`/movies/${row.row.original.id}`}>
-            <Image
-              src={`https://image.tmdb.org/t/p/original${poster_path}`}
-              alt={row.row.original.title}
-              height={160}
-              width={90}
-              layout="responsive"
-              className="rounded-xl"
-            />
-          </Link>
+          {poster_path && (
+            <Link href={`/movies/${row.row.original.id}`}>
+              <Image
+                src={`https://image.tmdb.org/t/p/original${poster_path}`}
+                alt={row.row.original.title}
+                height={160}
+                width={90}
+                layout="responsive"
+                className="rounded-xl"
+              />
+            </Link>
+          )}
         </div>
       );
     },
   },
   {
     accessorKey: "popularity",
-    header: "Popularity",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Popularity" />
+    ),
   },
   {
     accessorKey: "vote_average",
-    header: "Rating",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Rating" />
+    ),
   },
   {
     accessorKey: "vote_count",
-    header: "No. Of Votes",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Votes" />
+    ),
   },
   {
     accessorKey: "release_date",
-    header: "Release Date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Release Date" />
+    ),
   },
   {
     id: "actions",
