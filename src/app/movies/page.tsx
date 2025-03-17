@@ -141,16 +141,18 @@ export default function Page() {
                 <div className="flex px-2 py-8 w-44" key={movie.id}>
                   <Card>
                     <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                      <Link href={`/movies/${movie.id}`}>
-                        <Image
-                          src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                          alt={movie.title}
-                          height={160}
-                          width={90}
-                          layout="responsive"
-                          className="rounded-xl"
-                        />
-                      </Link>
+                      {movie.poster_path && (
+                        <Link href={`/movies/${movie.id}`}>
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
+                            alt={movie.title}
+                            height={160}
+                            width={90}
+                            layout="responsive"
+                            className="rounded-xl"
+                          />
+                        </Link>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
