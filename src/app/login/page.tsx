@@ -1,5 +1,5 @@
-'use client'
-import { getRequestToken } from "@/api/users/users.api";
+"use client";
+import { getRequestToken } from "@/api/login/login.api";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 

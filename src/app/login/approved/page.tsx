@@ -1,5 +1,5 @@
 "use client";
-import { getSessionId } from "@/api/users/users.api";
+import { getSessionId } from "@/api/login/login.api";
 import { LocalStorageService } from "@/services/local-storage-service";
 import { useEffect, useState } from "react";
 import { use } from "react";
@@ -22,8 +22,8 @@ export default function Page({
       setLoading(true);
       const { data, error, message } = await getSessionId(request_token);
       if (data && data.success) {
-          setSessionId(data.session_id);
-          LocalStorageService.set("session_id", data.session_id);
+        setSessionId(data.session_id);
+        LocalStorageService.set("session_id", data.session_id);
       }
       if (error && message) {
         setError(message);
