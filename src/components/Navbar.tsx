@@ -118,6 +118,17 @@ const Navbar: React.FC = () => {
                   </Link>
                 </NavigationMenuItem>
               </NavigationMenuList>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <Link href="/login" legacyBehavior passHref>
+                    <NavigationMenuLink
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Login
+                    </NavigationMenuLink>
+                  </Link>
+                </NavigationMenuItem>
+              </NavigationMenuList>
             </NavigationMenu>
           </div>
 
@@ -178,6 +189,12 @@ const Navbar: React.FC = () => {
               className="block px-3 py-2 rounded-md hover:bg-gray-700"
             >
               Actors
+            </Link>
+            <Link
+              href="/login"
+              className="block px-3 py-2 rounded-md hover:bg-gray-700"
+            >
+              Login
             </Link>
           </div>
         </div>
