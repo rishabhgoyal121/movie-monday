@@ -1,6 +1,7 @@
 "use client";
 import { getSessionId } from "@/api/login/login.api";
 import { LocalStorageService } from "@/services/local-storage-service";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { use } from "react";
 
@@ -37,7 +38,12 @@ export default function Page({
   return (
     <>
       {loading && <p>Loading...</p>}
-      {sessionId && <p>Session ID: {sessionId} </p>}
+      {sessionId && (
+        <div>
+          <p>Session ID: {sessionId} </p>
+          <Link href={'/user'} className="text-lg font-semibold underline">Go to account</Link>
+        </div>
+      )}
       {!approved && (
         <p>
           Request token not approved. Please generate a new token on login page
