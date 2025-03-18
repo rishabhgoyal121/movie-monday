@@ -116,8 +116,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         key={actor.credit_id}
                         className="md:basis-1/6 lg:basis-1/9"
                       >
-                        <div className="p-1">
-                          <Card>
+                        <div className="p-1 h-full">
+                          <Card className="h-full">
                             <CardContent className="flex aspect-square items-center justify-center p-0 ">
                               <Link href={`/actors/${actor.id}`}>
                                 <TMBDImage
