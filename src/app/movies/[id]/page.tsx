@@ -64,13 +64,24 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <h2>Movie</h2>
+      <h2 className="text-center text-lg font-semibold">Movie</h2>
       {loading && <p>Loading...</p>}
-      {!loading && <p>{movieData && movieData.title}</p>}
-      {!loading && <p>{movieData && movieData.tagline}</p>}
-      {!loading && <p>{movieData && movieData.overview}</p>}
+      <br />
+      {!loading && (
+        <p className="text-center font-bold text-3xl">
+          {movieData && movieData.title}
+        </p>
+      )}
+      {!loading && (
+        <p className="text-center italic">{movieData && movieData.tagline}</p>
+      )}
+      <br />
+      {!loading && (
+        <p className="text-center">{movieData && movieData.overview}</p>
+      )}
+      <br />
       {error && <p>{error}</p>}
-      <h2>Credits</h2>
+      <h2 className="ml-12 font-semibold text-lg">Credits</h2>
       {loadingCredits && <p>Loading...</p>}
       {!loadingCredits && (
         <Carousel
@@ -81,7 +92,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         >
           <CarouselPrevious />
           <CarouselContent className="">
-            {movieCreditsData&&movieCreditsData.length > 0 &&
+            {movieCreditsData &&
+              movieCreditsData.length > 0 &&
               movieCreditsData.map((actor) => {
                 return (
                   <CarouselItem
