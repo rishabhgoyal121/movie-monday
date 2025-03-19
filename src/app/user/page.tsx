@@ -6,11 +6,15 @@ import Image from "next/image";
 import { getFavoriteMovies } from "@/api/user/user.api";
 import { Movie } from "@/interfaces/movies";
 import MovieCarousel from "../MovieCarousel";
+import { getFavoriteTVShows } from "@/api/user/user.api";
+import { TVShow } from "@/interfaces/tvShows";
+import TVShowCarousel from "../TVShowCarousel";
 
 export default function Page() {
   const [loading, setLoading] = useState(true);
   const [userDetails, setUserDetails] = useState<User | null | undefined>();
   const [favMovies, setFavMovies] = useState<Movie[] | null | undefined>();
+  const [favTVShows, setFavTVShows] = useState<TVShow[] | null | undefined>();
   const [error, setError] = useState<string | null>(null);
   useEffect(() => {
     const loadDetails = async () => {
@@ -26,10 +30,18 @@ export default function Page() {
         const { data, error, message } = await getFavoriteMovies();
         console.log(data, error, message);
         if (data && data.results) {
-          setFavMovies(data.results)
+          setFavMovies(data.results);
         }
       };
       loadFavoriteMovies();
+      const loadFavoriteTVShows = async () => {
+        const { data, error, message } = await getFavoriteTVShows();
+        console.log(data, error, message);
+        if (data && data.results) {
+          setFavTVShows(data.results);
+        }
+      };
+      loadFavoriteTVShows();
       setLoading(false);
     };
     loadDetails();
@@ -57,9 +69,13 @@ export default function Page() {
       ) : (
         <p>{userDetails?.username}</p>
       )}
-      <div className="w-fit my-8">
+      <div className="w-full my-8">
         <p className="text-lg font-semibold pl-4">Favorite Movies</p>
         <MovieCarousel movieList={favMovies} />
+      </div>
+      <div className="w-full my-8">
+        <p className="text-lg font-semibold pl-4">Favorite TV Shows</p>
+        <TVShowCarousel tvShowList={favTVShows} />
       </div>
       {error && <p>{error}</p>}
     </>
