@@ -20,5 +20,5 @@ export default function TMBDImage({ src, alt = "" }: TMBDImageProps) {
       </>
     );
   }
-  return <p className="font-semibold text-center h-full">{alt}</p>;
+  return <p className="font-semibold text-center h-full flex items-center">{alt}</p>;
 }
