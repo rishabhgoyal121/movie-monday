@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -9,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { Movie } from "@/interfaces/movies";
+import TMBDImage from "@/components/TMBDImage";
 
 export default function MovieCarousel({
   movieList,
@@ -23,33 +23,20 @@ export default function MovieCarousel({
       className="w-full max-w-[90vw] ml-16 mt-4"
     >
       <CarouselPrevious />
-      <CarouselContent className="">
+      <CarouselContent className="w-full">
         {movieList &&
           movieList.length > 0 &&
           movieList.map((movie) => {
             return (
               <CarouselItem
                 key={movie.id}
-                className="md:basis-1/6 lg:basis-1/9"
+                className="md:basis-1/6 lg:basis-1/9 w-full"
               >
                 <div className="p-1">
-                  <Card>
-                    <Link href={`/movies/${movie.id}`}>
-                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                        {movie.poster_path ? (
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
-                            alt={movie.title}
-                            height={160}
-                            width={90}
-                            layout="responsive"
-                            className="rounded-xl"
-                          />
-                        ) : (
-                          <p className="text-center font-semibold">
-                            {movie.title}
-                          </p>
-                        )}
+                  <Card className=" w-full">
+                    <Link href={`/movies/${movie.id}`} className=" w-full">
+                      <CardContent className="flex aspect-square items-center justify-center p-0 w-full">
+                        <TMBDImage src={movie.poster_path} alt={movie.title} />
                       </CardContent>
                     </Link>
                   </Card>
