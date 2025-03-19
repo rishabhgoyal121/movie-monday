@@ -7,13 +7,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import { Movie } from "@/interfaces/movies";
+import { TVShow } from "@/interfaces/tvShows";
 import TMBDImage from "@/components/TMBDImage";
 
-export default function MovieCarousel({
-  movieList,
+export default function TVShowCarousel({
+  tvShowList,
 }: {
-  movieList: Movie[] | null | undefined;
+  tvShowList: TVShow[] | null | undefined;
 }) {
   return (
     <Carousel
@@ -23,20 +23,20 @@ export default function MovieCarousel({
       className="w-full max-w-[90vw] ml-16 mt-4"
     >
       <CarouselPrevious />
-      <CarouselContent className="w-full">
-        {movieList &&
-          movieList.length > 0 &&
-          movieList.map((movie) => {
+      <CarouselContent className="">
+        {tvShowList &&
+          tvShowList.length > 0 &&
+          tvShowList.map((tvShow) => {
             return (
               <CarouselItem
-                key={movie.id}
-                className="md:basis-1/6 lg:basis-1/9 w-full"
+                key={tvShow.id}
+                className="md:basis-1/6 lg:basis-1/9"
               >
                 <div className="p-1">
-                  <Card className=" w-full">
-                    <Link href={`/movies/${movie.id}`} className=" w-full">
-                      <CardContent className="flex aspect-square items-center justify-center p-0 w-full">
-                        <TMBDImage src={movie.poster_path} alt={movie.title} />
+                  <Card>
+                    <Link href={`/tvShows/${tvShow.id}`}>
+                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                        <TMBDImage src={tvShow.poster_path} alt={tvShow.name} />
                       </CardContent>
                     </Link>
                   </Card>
