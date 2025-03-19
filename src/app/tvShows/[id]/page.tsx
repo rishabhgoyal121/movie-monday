@@ -12,8 +12,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { TVShowDetails, TVShowCredit } from "@/interfaces/tvShows";
 import { fetchTVShowDetails, fetchTVShowCredits } from "@/api/tvShows/tvShows.api";
 import TMBDImage from "@/components/TMBDImage";
-import { Heart } from "lucide-react";
+import { Heart, PlusIcon, CheckIcon } from "lucide-react";
 import { addToFavorites, getFavoriteTVShows } from "@/api/user/user.api";
+import { addToWatchlist, getWatchlistTVShows } from "@/api/user/user.api";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     null
   );
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   useEffect(() => {
     const getProps = async () => {
@@ -71,6 +73,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         }
       };
       loadFavoriteTVShows();
+      const loadWatchlistTVShows = async () => {
+        
+        const { data, error, message } = await getWatchlistTVShows();
+        
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setIsInWatchlist(true);
+          }
+        }
+      };
+      loadWatchlistTVShows();
+      
     };
     getProps();
   }, [params]);
@@ -81,6 +96,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       media_id: +id,
       favorite: i,
       media_type:'tv'
+    });
+    console.log(data, error, message);
+  };
+
+  const toggleWatchlist = async (i: boolean) => {
+    const { id } = await params;
+    const { data, error, message } = await addToWatchlist({
+      media_id: +id,
+      watchlist: i,
+      media_type: "tv",
     });
     console.log(data, error, message);
   };
@@ -117,7 +142,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     </p>
                     <p className="italic">{tvShowData && tvShowData.tagline}</p>
                   </div>
-                  <div className="absolute top-20 right-40">
+                  <div className="absolute top-20 right-24 flex gap-8">
                     <Heart
                       size={32}
                       fill={isFavorite ? "red" : ""}
@@ -128,11 +153,27 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         });
                       }}
                     />
+                    <div
+                      onClick={() => {
+                        setIsInWatchlist((i) => {
+                          toggleWatchlist(!i);
+                          return !i;
+                        });
+                      }}
+                    >
+                      {isInWatchlist ? (
+                        <CheckIcon size={36} />
+                      ) : (
+                        <PlusIcon size={36} />
+                      )}
+                    </div>
                   </div>
                 </div>
 
                 <br />
-                <p className="mx-20 mt-2">{tvShowData && tvShowData.overview}</p>
+                <p className="mx-20 mt-2">
+                  {tvShowData && tvShowData.overview}
+                </p>
               </div>
             </div>
           )}
