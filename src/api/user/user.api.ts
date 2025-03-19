@@ -76,6 +76,67 @@ async function getFavoriteTVShows() {
   }
 }
 
+interface addToWatchlistProps {
+  media_type?: string;
+  media_id: number;
+  watchlist?: boolean;
+}
+
+async function addToWatchlist({
+  media_id,
+  media_type = "movie",
+  watchlist = true,
+}: addToWatchlistProps) {
+  try {
+    const body = {
+      media_type: media_type,
+      media_id: media_id,
+      watchlist: watchlist,
+    };
+    const response = await instance.post("/account/21865023/watchlist", body);
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in adding media to watchlist",
+    };
+  }
+}
+
+async function getWatchlistMovies() {
+  try {
+    const response = await instance.get(
+      "/account/21865023/watchlist/movies?language=en-US&page=1&sort_by=created_at.asc"
+    );
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in getting watchlist movies.",
+    };
+  }
+}
+
+async function getWatchlistTVShows() {
+  try {
+    const response = await instance.get(
+      "/account/21865023/watchlist/tv?language=en-US&page=1&sort_by=created_at.asc"
+    );
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in getting watchlist TV Shows.",
+    };
+  }
+}
+
 
 
 export {
@@ -83,4 +144,7 @@ export {
   addToFavorites,
   getFavoriteMovies,
   getFavoriteTVShows,
+  addToWatchlist,
+  getWatchlistMovies,
+  getWatchlistTVShows,
 };

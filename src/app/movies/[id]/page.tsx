@@ -12,8 +12,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { MovieDetails, MovieCredit } from "@/interfaces/movies";
 import { fetchMovieDetails, fetchMovieCredits } from "@/api/movies/movies.api";
 import TMBDImage from "@/components/TMBDImage";
-import { Heart } from "lucide-react";
+import { Heart, PlusIcon, CheckIcon } from "lucide-react";
 import { addToFavorites, getFavoriteMovies } from "@/api/user/user.api";
+import { addToWatchlist, getWatchlistMovies } from "@/api/user/user.api";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
@@ -29,6 +30,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     null
   );
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isInWatchlist, setIsInWatchlist] = useState(false);
 
   useEffect(() => {
     const getProps = async () => {
@@ -71,15 +73,34 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         }
       };
       loadFavoriteMovies();
+      const loadWatchlistMovies = async () => {
+        const { data, error, message } = await getWatchlistMovies();
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setIsInWatchlist(true);
+          }
+        }
+      };
+      loadWatchlistMovies();
     };
     getProps();
   }, [params]);
 
-  const toggleFavorite = async (i:boolean) => {
+  const toggleFavorite = async (i: boolean) => {
     const { id } = await params;
     const { data, error, message } = await addToFavorites({
       media_id: +id,
       favorite: i,
+    });
+    console.log(data, error, message);
+  };
+
+  const toggleWatchlist = async (i: boolean) => {
+    const { id } = await params;
+    const { data, error, message } = await addToWatchlist({
+      media_id: +id,
+      watchlist: i,
     });
     console.log(data, error, message);
   };
@@ -116,7 +137,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     </p>
                     <p className="italic">{movieData && movieData.tagline}</p>
                   </div>
-                  <div className="absolute top-20 right-40">
+                  <div className="absolute top-20 right-24 flex gap-8">
                     <Heart
                       size={32}
                       fill={isFavorite ? "red" : ""}
@@ -127,6 +148,20 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         });
                       }}
                     />
+                    <div
+                      onClick={() => {
+                        setIsInWatchlist((i) => {
+                          toggleWatchlist(!i);
+                          return !i;
+                        });
+                      }}
+                    >
+                      {isInWatchlist ? (
+                        <CheckIcon size={36} />
+                      ) : (
+                        <PlusIcon size={36} />
+                      )}
+                    </div>
                   </div>
                 </div>
 
