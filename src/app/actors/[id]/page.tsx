@@ -90,14 +90,39 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   return (
     <>
-      <h2>Actor</h2>
+      <h2 className="mx-4 pt-4 text-lg font-semibold">Actor</h2>
       {loading && <p>Loading...</p>}
-      {!loading && <p>{actorData && actorData.name}</p>}
-      {!loading && <p>{actorData && actorData.biography}</p>}
+      {!loading && (
+        <div className="flex text-center mb-4">
+          <div className="w-72 mx-4 flex items-center">
+            <TMBDImage
+              src={actorData?.profile_path}
+              alt={actorData?.name ?? ""}
+            />
+          </div>
+
+          <div className=" text-center w-full">
+            <div>
+              <p className=" font-bold text-3xl">
+                {actorData && actorData.name}
+              </p>
+              <p className="italic">
+                {actorData && actorData.birthday} -{" "}
+                {actorData && actorData.deathday}
+              </p>
+            </div>
+
+            <br />
+            <p className="mx-20 mt-2">{actorData && actorData.biography}</p>
+          </div>
+        </div>
+      )}
       {error && <p>{error}</p>}
-      <h2>Movie Credits</h2>
+      {movieCredits && movieCredits.length > 0 && (
+        <h2 className="ml-12 font-semibold text-lg">Actor Credits</h2>
+      )}
       {loadingMovieCredits && <p>Loading...</p>}
-      {!loadingMovieCredits && (
+      {movieCredits && movieCredits.length > 0 && (
         <Carousel
           opts={{
             align: "start",
@@ -134,42 +159,46 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         </Carousel>
       )}
       {errorMovieCredits && <p>{errorMovieCredits}</p>}
-      <h2>TV Show Credits</h2>
+      {TVShowCredits && TVShowCredits.length > 0 && (
+        <h2 className="ml-12 font-semibold text-lg">TV Show Credits</h2>
+      )}
       {loadingTVShowCredits && <p>Loading...</p>}
-      <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-[90vw] ml-16 mt-4"
-      >
-        <CarouselPrevious />
-        <CarouselContent className="">
-          {TVShowCredits &&
-            TVShowCredits.length > 0 &&
-            TVShowCredits.map((tvShow) => {
-              return (
-                <CarouselItem
-                  key={tvShow.credit_id}
-                  className="md:basis-1/6 lg:basis-1/9"
-                >
-                  <div className="p-1">
-                    <Card>
-                      <Link href={`/tvShows/${tvShow.id}`}>
-                        <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                          <TMBDImage
-                            src={tvShow.poster_path}
-                            alt={tvShow.name}
-                          />
-                        </CardContent>
-                      </Link>
-                    </Card>
-                  </div>
-                </CarouselItem>
-              );
-            })}
-        </CarouselContent>
-        <CarouselNext />
-      </Carousel>
+      {TVShowCredits && TVShowCredits.length > 0 && (
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full max-w-[90vw] ml-16 mt-4"
+        >
+          <CarouselPrevious />
+          <CarouselContent className="">
+            {TVShowCredits &&
+              TVShowCredits.length > 0 &&
+              TVShowCredits.map((tvShow) => {
+                return (
+                  <CarouselItem
+                    key={tvShow.credit_id}
+                    className="md:basis-1/6 lg:basis-1/9"
+                  >
+                    <div className="p-1">
+                      <Card>
+                        <Link href={`/tvShows/${tvShow.id}`}>
+                          <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                            <TMBDImage
+                              src={tvShow.poster_path}
+                              alt={tvShow.name}
+                            />
+                          </CardContent>
+                        </Link>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                );
+              })}
+          </CarouselContent>
+          <CarouselNext />
+        </Carousel>
+      )}
       {errorTVShowCredits && <p>{errorTVShowCredits}</p>}
     </>
   );
