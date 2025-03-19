@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import {
   Carousel,
   CarouselContent,
@@ -10,11 +9,17 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import type { ActorDetails, ActorCreditMovie, ActorCreditTVShow } from "@/interfaces/actors";
+import type {
+  ActorDetails,
+  ActorCreditMovie,
+  ActorCreditTVShow,
+} from "@/interfaces/actors";
 import {
   fetchActorDetails,
-  fetchActorCreditMovies, fetchActorCreditTVShows
+  fetchActorCreditMovies,
+  fetchActorCreditTVShows,
 } from "@/api/actors/actors.api";
+import TMBDImage from "@/components/TMBDImage";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
@@ -30,8 +35,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     string | null | undefined
   >(null);
   const [loadingTVShowCredits, setLoadingTVShowCredits] = useState(true);
-  const [TVShowCredits, setTVShowCredits] = useState<ActorCreditTVShow[]|undefined|null>(null);
-  const [errorTVShowCredits, setErrorTVShowCredits] = useState<string|null|undefined>(null);
+  const [TVShowCredits, setTVShowCredits] = useState<
+    ActorCreditTVShow[] | undefined | null
+  >(null);
+  const [errorTVShowCredits, setErrorTVShowCredits] = useState<
+    string | null | undefined
+  >(null);
 
   useEffect(() => {
     const getProps = async () => {
@@ -107,18 +116,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   >
                     <div className="p-1">
                       <Card>
-                        <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                          <Link href={`/movies/${movie.id}`}>
-                            <Image
-                              src={`https://image.tmdb.org/t/p/original/${movie.poster_path}`}
+                        <Link href={`/movies/${movie.id}`}>
+                          <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                            <TMBDImage
+                              src={movie.poster_path}
                               alt={movie.title}
-                              height={160}
-                              width={90}
-                              layout="responsive"
-                              className="rounded-xl"
                             />
-                          </Link>
-                        </CardContent>
+                          </CardContent>
+                        </Link>
                       </Card>
                     </div>
                   </CarouselItem>
@@ -139,7 +144,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       >
         <CarouselPrevious />
         <CarouselContent className="">
-          {TVShowCredits&&TVShowCredits.length > 0 &&
+          {TVShowCredits &&
+            TVShowCredits.length > 0 &&
             TVShowCredits.map((tvShow) => {
               return (
                 <CarouselItem
@@ -148,18 +154,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 >
                   <div className="p-1">
                     <Card>
-                      <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                        <Link href={`/tvShows/${tvShow.id}`}>
-                          <Image
-                            src={`https://image.tmdb.org/t/p/original/${tvShow.poster_path}`}
+                      <Link href={`/tvShows/${tvShow.id}`}>
+                        <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                          <TMBDImage
+                            src={tvShow.poster_path}
                             alt={tvShow.name}
-                            height={160}
-                            width={90}
-                            layout="responsive"
-                            className="rounded-xl"
                           />
-                        </Link>
-                      </CardContent>
+                        </CardContent>
+                      </Link>
                     </Card>
                   </div>
                 </CarouselItem>
