@@ -12,6 +12,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import type { MovieDetails, MovieCredit } from "@/interfaces/movies";
 import { fetchMovieDetails, fetchMovieCredits } from "@/api/movies/movies.api";
 import TMBDImage from "@/components/TMBDImage";
+import { Heart } from "lucide-react";
+import { addToFavorites, getFavoriteMovies } from "@/api/user/user.api";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
@@ -26,6 +28,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [errorCredits, setErrorCredits] = useState<string | null | undefined>(
     null
   );
+  const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     const getProps = async () => {
@@ -58,9 +61,28 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         setLoadingCredits(false); // End loading
       };
       loadMovieCredits();
+      const loadFavoriteMovies = async () => {
+        const { data, error, message } = await getFavoriteMovies();
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setIsFavorite(true);
+          }
+        }
+      };
+      loadFavoriteMovies();
     };
     getProps();
   }, [params]);
+
+  const toggleFavorite = async (i:boolean) => {
+    const { id } = await params;
+    const { data, error, message } = await addToFavorites({
+      media_id: +id,
+      favorite: i,
+    });
+    console.log(data, error, message);
+  };
 
   return (
     <div
@@ -87,10 +109,27 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 />
               </div>
               <div>
-                <p className=" font-bold text-3xl">
-                  {movieData && movieData.title}
-                </p>
-                <p className="italic">{movieData && movieData.tagline}</p>
+                <div className="">
+                  <div>
+                    <p className=" font-bold text-3xl">
+                      {movieData && movieData.title}
+                    </p>
+                    <p className="italic">{movieData && movieData.tagline}</p>
+                  </div>
+                  <div className="absolute top-20 right-40">
+                    <Heart
+                      size={32}
+                      fill={isFavorite ? "red" : ""}
+                      onClick={() => {
+                        setIsFavorite((i) => {
+                          toggleFavorite(!i);
+                          return !i;
+                        });
+                      }}
+                    />
+                  </div>
+                </div>
+
                 <br />
                 <p className="mx-20 mt-2">{movieData && movieData.overview}</p>
               </div>
