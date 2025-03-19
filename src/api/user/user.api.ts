@@ -60,6 +60,27 @@ async function getFavoriteMovies() {
   }
 }
 
+async function getFavoriteTVShows() {
+  try {
+    const response = await instance.get(
+      "/account/21865023/favorite/tv?language=en-US&page=1&sort_by=created_at.asc"
+    );
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in getting favorite TV Shows.",
+    };
+  }
+}
 
 
-export { getUserDetails, addToFavorites, getFavoriteMovies };
+
+export {
+  getUserDetails,
+  addToFavorites,
+  getFavoriteMovies,
+  getFavoriteTVShows,
+};
