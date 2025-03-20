@@ -15,7 +15,10 @@ interface FetchTVShowsResponse {
   message?: string;
 }
 
-const fetchTVShows = async (tvShowListType: string = 'upcoming', pageNumber:number=1): Promise<FetchTVShowsResponse> => {
+const fetchTVShows = async (
+  tvShowListType: string = "upcoming",
+  pageNumber: number = 1
+): Promise<FetchTVShowsResponse> => {
   try {
     const response = await instance.get<TVShowApiResponse>(
       `/tv/${tvShowListType}?language=en-US&page=${pageNumber}`
@@ -24,7 +27,9 @@ const fetchTVShows = async (tvShowListType: string = 'upcoming', pageNumber:numb
   } catch (err) {
     return {
       error: true,
-      message: axios.isAxiosError(err) ? err.message : "Error in fetching TV Shows",
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching TV Shows",
     };
   }
 };
@@ -84,4 +89,32 @@ const fetchTVShowCredits = async (
   }
 };
 
-export { fetchTVShows, fetchTVShowDetails, fetchTVShowCredits };
+interface addTVShowRatingProps {
+  id: string;
+  rating: number | null;
+}
+
+async function addTVShowRating({ id, rating }: addTVShowRatingProps) {
+  try {
+    const body = {
+      value: rating,
+    };
+    const response = await instance.post(`/tv/${id}/rating`, body);
+
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "error in adding tv show rating",
+    };
+  }
+}
+
+export {
+  fetchTVShows,
+  fetchTVShowDetails,
+  fetchTVShowCredits,
+  addTVShowRating,
+};

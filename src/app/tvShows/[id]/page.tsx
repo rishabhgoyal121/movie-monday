@@ -10,17 +10,42 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TVShowDetails, TVShowCredit } from "@/interfaces/tvShows";
-import { fetchTVShowDetails, fetchTVShowCredits } from "@/api/tvShows/tvShows.api";
+import {
+  fetchTVShowDetails,
+  fetchTVShowCredits,
+  addTVShowRating,
+} from "@/api/tvShows/tvShows.api";
 import TMBDImage from "@/components/TMBDImage";
 import { Heart, PlusIcon, CheckIcon } from "lucide-react";
-import { addToFavorites, getFavoriteTVShows } from "@/api/user/user.api";
-import { addToWatchlist, getWatchlistTVShows } from "@/api/user/user.api";
+import {
+  addToFavorites,
+  getFavoriteTVShows,
+  addToWatchlist,
+  getWatchlistTVShows,
+  getUserRatedTVShows,
+} from "@/api/user/user.api";
+import Rating from "@mui/material/Rating";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
+import StarIcon from "@mui/icons-material/Star";
+import { styled } from "@mui/material/styles";
+
+const StyledRating = styled(Rating)({
+  "& .MuiRating-iconFilled": {
+    color: "#faaf00",
+  },
+  "& .MuiRating-icon": {
+    color: "#faaf00",
+  },
+  "& .MuiRating-iconHover": {
+    color: "#faaf00",
+  },
+});
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
-  const [tvShowData, setTVShowData] = useState<TVShowDetails | undefined | null>(
-    null
-  );
+  const [tvShowData, setTVShowData] = useState<
+    TVShowDetails | undefined | null
+  >(null);
   const [error, setError] = useState<string | null | undefined>(null);
   const [loadingCredits, setLoadingCredits] = useState(true);
   const [tvShowCreditsData, setTVShowCreditsData] = useState<
@@ -30,7 +55,14 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     null
   );
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isHoveredOnFav, setIsHoveredOnFav] = useState(false);
+  const shouldFillFav = isHoveredOnFav ? !isFavorite : isFavorite;
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [isHoveredOnWatchList, setIsHoveredOnWatchList] = useState(false);
+  const shouldCheckWatchList = isHoveredOnWatchList
+    ? !isInWatchlist
+    : isInWatchlist;
+  const [userRating, setUserRating] = useState<number | null>(0);
 
   useEffect(() => {
     const getProps = async () => {
@@ -74,9 +106,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       };
       loadFavoriteTVShows();
       const loadWatchlistTVShows = async () => {
-        
         const { data, error, message } = await getWatchlistTVShows();
-        
+
         console.log(data, error, message);
         for (let i = 0; i < data.results.length; i++) {
           if (data.results[i].id == id) {
@@ -85,7 +116,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         }
       };
       loadWatchlistTVShows();
-      
+      const loadUserRatedTVShows = async () => {
+        const { data, error, message } = await getUserRatedTVShows();
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setUserRating(data.results[i].rating);
+          }
+        }
+      };
+      loadUserRatedTVShows();
     };
     getProps();
   }, [params]);
@@ -95,7 +135,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const { data, error, message } = await addToFavorites({
       media_id: +id,
       favorite: i,
-      media_type:'tv'
+      media_type: "tv",
     });
     console.log(data, error, message);
   };
@@ -110,19 +150,25 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     console.log(data, error, message);
   };
 
+  const toggleRating = async (rating: number | null) => {
+    const { id } = await params;
+    const { data, error, message } = await addTVShowRating({ id, rating });
+    console.log(data, error, message);
+  };
+
   return (
     <div
       style={
         tvShowData?.backdrop_path
           ? {
-              backgroundImage: `url(https://image.tmdb.org/t/p/original/${tvShowData.backdrop_path})`,
+              backgroundImage: `url(https://image.tmdb.org/t/p/original/${tvShowData?.backdrop_path})`,
             }
           : {}
       }
-      className="bg-cover bg-center bg-no-repeat h-[100vh] relative top-0 w-[100vw]"
+      className="bg-cover bg-center bg-no-repeat h-[100vh] relative top-0 w-full"
     >
-      <div className="relative bg-[#00000099] h-[100vh] fixed top-0 w-[100vw]">
-        <h2 className="mx-4 pt-4 text-lg font-semibold">TVShow</h2>
+      <div className="relative bg-[#00000099] h-[100vh] fixed top-0 w-full">
+        <h2 className="mx-4 pt-4 text-lg font-semibold">Movie</h2>
         {loading && <p>Loading...</p>}
         <div>
           <br />
@@ -134,38 +180,81 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   alt={tvShowData?.name ?? ""}
                 />
               </div>
-              <div>
-                <div className="">
-                  <div>
+              <div className="w-full">
+                <div className="flex w-full">
+                  <div className="w-[90%]">
                     <p className=" font-bold text-3xl">
                       {tvShowData && tvShowData.name}
                     </p>
                     <p className="italic">{tvShowData && tvShowData.tagline}</p>
                   </div>
-                  <div className="absolute top-20 right-24 flex gap-8">
-                    <Heart
-                      size={32}
-                      fill={isFavorite ? "red" : ""}
-                      onClick={() => {
-                        setIsFavorite((i) => {
-                          toggleFavorite(!i);
-                          return !i;
-                        });
-                      }}
-                    />
-                    <div
-                      onClick={() => {
-                        setIsInWatchlist((i) => {
-                          toggleWatchlist(!i);
-                          return !i;
-                        });
-                      }}
-                    >
-                      {isInWatchlist ? (
-                        <CheckIcon size={36} />
-                      ) : (
-                        <PlusIcon size={36} />
-                      )}
+                  <div className="flex flex-col gap-4 ml-[-22%]">
+                    <div className="flex gap-8 items-center align-center justify-center">
+                      <Heart
+                        size={32}
+                        fill={shouldFillFav ? "red" : ""}
+                        onClick={() => {
+                          setIsFavorite((i) => {
+                            toggleFavorite(!i);
+                            return !i;
+                          });
+                        }}
+                        onMouseEnter={() => setIsHoveredOnFav(true)}
+                        onMouseLeave={() => setIsHoveredOnFav(false)}
+                      />
+                      <div
+                        onClick={() => {
+                          setIsInWatchlist((i) => {
+                            toggleWatchlist(!i);
+                            return !i;
+                          });
+                        }}
+                        onMouseEnter={() => setIsHoveredOnWatchList(true)}
+                        onMouseLeave={() => setIsHoveredOnWatchList(false)}
+                      >
+                        {shouldCheckWatchList ? (
+                          <CheckIcon size={36} />
+                        ) : (
+                          <PlusIcon size={36} />
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-1">
+                      <div className="flex flex-col gap-2 items-start justify-center w-28">
+                        <p className="text-lg font-semibold flex justify-center">
+                          Rating :{" "}
+                        </p>
+
+                        <p className="text-lg font-semibold flex items-center">
+                          Your Rating :{" "}
+                        </p>
+                      </div>
+                      <div className="flex flex-col gap-2 items-center justify-center">
+                        <StyledRating
+                          name="avg-rating"
+                          value={tvShowData?.vote_average}
+                          defaultValue={0}
+                          precision={0.5}
+                          max={10}
+                          readOnly
+                          className="w-full"
+                          icon={<StarIcon fontSize="inherit" />}
+                          emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                        />
+                        <StyledRating
+                          name="user-rating"
+                          value={userRating}
+                          onChange={(e, v) => {
+                            setUserRating(v);
+                            toggleRating(v);
+                          }}
+                          defaultValue={0}
+                          precision={0.5}
+                          max={10}
+                          icon={<StarIcon fontSize="inherit" />}
+                          emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

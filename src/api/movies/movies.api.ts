@@ -15,7 +15,10 @@ interface FetchMoviesResponse {
   message?: string;
 }
 
-const fetchMovies = async (movieListType: string = 'upcoming', pageNumber:number=1): Promise<FetchMoviesResponse> => {
+const fetchMovies = async (
+  movieListType: string = "upcoming",
+  pageNumber: number = 1
+): Promise<FetchMoviesResponse> => {
   try {
     const response = await instance.get<MovieApiResponse>(
       `/movie/${movieListType}?language=en-US&page=${pageNumber}`
@@ -36,17 +39,19 @@ interface FetchMovieDetailsResponse {
 }
 
 const fetchMovieDetails = async (
-  movieId: string = '278',
+  movieId: string = "278"
 ): Promise<FetchMovieDetailsResponse> => {
   try {
     const response = await instance.get<MovieDetails>(
       `/movie/${movieId}?language=en-US`
     );
-    return { data: response.data }; 
+    return { data: response.data };
   } catch (err) {
     return {
       error: true,
-      message: axios.isAxiosError(err) ? err.message : "Error in fetching movie details",
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching movie details",
     };
   }
 };
@@ -75,9 +80,34 @@ const fetchMovieCredits = async (
   } catch (err) {
     return {
       error: true,
-      message: axios.isAxiosError(err) ? err.message : "Error in fetching movie credits",
+      message: axios.isAxiosError(err)
+        ? err.message
+        : "Error in fetching movie credits",
     };
   }
 };
 
-export { fetchMovies, fetchMovieDetails, fetchMovieCredits };
+interface addMovieRatingProps {
+  id: string;
+  rating: number | null;
+}
+
+async function addMovieRating({ id, rating }: addMovieRatingProps) {
+  try {
+    const body = {
+      value: rating,
+    };
+    const response = await instance.post(`/movie/${id}/rating`, body);
+
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "error in adding movie rating",
+    };
+  }
+}
+
+export { fetchMovies, fetchMovieDetails, fetchMovieCredits, addMovieRating };

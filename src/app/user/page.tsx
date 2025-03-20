@@ -1,14 +1,18 @@
 "use client";
-import { getUserDetails } from "@/api/user/user.api";
 import { useEffect, useState } from "react";
 import { User } from "@/interfaces/users";
 import Image from "next/image";
-import { getFavoriteMovies } from "@/api/user/user.api";
-import { getWatchlistMovies } from "@/api/user/user.api";
 import { Movie } from "@/interfaces/movies";
 import MovieCarousel from "../MovieCarousel";
-import { getFavoriteTVShows } from "@/api/user/user.api";
-import { getWatchlistTVShows } from "@/api/user/user.api";
+import {
+  getUserDetails,
+  getFavoriteTVShows,
+  getWatchlistTVShows,
+  getFavoriteMovies,
+  getWatchlistMovies,
+  getUserRatedMovies,
+  getUserRatedTVShows,
+} from "@/api/user/user.api";
 import { TVShow } from "@/interfaces/tvShows";
 import TVShowCarousel from "../TVShowCarousel";
 
@@ -21,6 +25,12 @@ export default function Page() {
     Movie[] | null | undefined
   >();
   const [watchlistTVShows, setWatchlistTVShows] = useState<
+    TVShow[] | null | undefined
+  >();
+  const [userRatedMovies, setUserRatedMovies] = useState<
+    Movie[] | null | undefined
+  >();
+  const [userRatedTVShows, setUserRatedTVShows] = useState<
     TVShow[] | null | undefined
   >();
   const [error, setError] = useState<string | null>(null);
@@ -66,8 +76,22 @@ export default function Page() {
         }
       };
       loadWatchlistTVShows();
+
+      const loadUserRatedMovies = async () => {
+        const { data, error, message } = await getUserRatedMovies();
+        console.log(data, error, message);
+        setUserRatedMovies(data.results);
+      };
+      loadUserRatedMovies();
+      const loadUserRatedTVShows = async () => {
+        const { data, error, message } = await getUserRatedTVShows();
+        console.log(data, error, message);
+        setUserRatedTVShows(data.results);
+      };
+      loadUserRatedTVShows();
       setLoading(false);
     };
+
     loadDetails();
   }, []);
   return (
@@ -94,20 +118,28 @@ export default function Page() {
         <p>{userDetails?.username}</p>
       )}
       <div className="w-full my-8">
-        <p className="text-lg font-semibold pl-4">Favorite Movies</p>
+        <p className="text-lg font-semibold pl-4">My Favorite Movies</p>
         <MovieCarousel movieList={favMovies} />
       </div>
       <div className="w-full my-8">
-        <p className="text-lg font-semibold pl-4">Favorite TV Shows</p>
+        <p className="text-lg font-semibold pl-4">My Favorite TV Shows</p>
         <TVShowCarousel tvShowList={favTVShows} />
       </div>
       <div className="w-full my-8">
-        <p className="text-lg font-semibold pl-4">Watchlist Movies</p>
+        <p className="text-lg font-semibold pl-4">My Watchlist Movies</p>
         <MovieCarousel movieList={watchlistMovies} />
       </div>
       <div className="w-full my-8">
-        <p className="text-lg font-semibold pl-4">Watchlist TV Shows</p>
+        <p className="text-lg font-semibold pl-4">My Watchlist TV Shows</p>
         <TVShowCarousel tvShowList={watchlistTVShows} />
+      </div>
+      <div className="w-full my-8">
+        <p className="text-lg font-semibold pl-4">My Rated Movies</p>
+        <MovieCarousel movieList={userRatedMovies} />
+      </div>
+      <div className="w-full my-8">
+        <p className="text-lg font-semibold pl-4">My Rated TV Shows</p>
+        <TVShowCarousel tvShowList={userRatedTVShows} />
       </div>
       {error && <p>{error}</p>}
     </>
