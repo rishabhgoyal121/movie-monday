@@ -10,11 +10,20 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import type { TVShowDetails, TVShowCredit } from "@/interfaces/tvShows";
-import { fetchTVShowDetails, fetchTVShowCredits } from "@/api/tvShows/tvShows.api";
+import {
+  fetchTVShowDetails,
+  fetchTVShowCredits,
+  addTVShowRating,
+} from "@/api/tvShows/tvShows.api";
 import TMBDImage from "@/components/TMBDImage";
 import { Heart, PlusIcon, CheckIcon } from "lucide-react";
-import { addToFavorites, getFavoriteTVShows } from "@/api/user/user.api";
-import { addToWatchlist, getWatchlistTVShows } from "@/api/user/user.api";
+import {
+  addToFavorites,
+  getFavoriteTVShows,
+  addToWatchlist,
+  getWatchlistTVShows,
+  getUserRatedTVShows,
+} from "@/api/user/user.api";
 import Rating from "@mui/material/Rating";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
@@ -34,9 +43,9 @@ const StyledRating = styled(Rating)({
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [loading, setLoading] = useState(true);
-  const [tvShowData, setTVShowData] = useState<TVShowDetails | undefined | null>(
-    null
-  );
+  const [tvShowData, setTVShowData] = useState<
+    TVShowDetails | undefined | null
+  >(null);
   const [error, setError] = useState<string | null | undefined>(null);
   const [loadingCredits, setLoadingCredits] = useState(true);
   const [tvShowCreditsData, setTVShowCreditsData] = useState<
@@ -97,9 +106,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       };
       loadFavoriteTVShows();
       const loadWatchlistTVShows = async () => {
-        
         const { data, error, message } = await getWatchlistTVShows();
-        
+
         console.log(data, error, message);
         for (let i = 0; i < data.results.length; i++) {
           if (data.results[i].id == id) {
@@ -108,7 +116,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         }
       };
       loadWatchlistTVShows();
-      
+      const loadUserRatedTVShows = async () => {
+        const { data, error, message } = await getUserRatedTVShows();
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setUserRating(data.results[i].rating);
+          }
+        }
+      };
+      loadUserRatedTVShows();
     };
     getProps();
   }, [params]);
@@ -118,7 +135,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const { data, error, message } = await addToFavorites({
       media_id: +id,
       favorite: i,
-      media_type:'tv'
+      media_type: "tv",
     });
     console.log(data, error, message);
   };
@@ -130,6 +147,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       watchlist: i,
       media_type: "tv",
     });
+    console.log(data, error, message);
+  };
+
+  const toggleRating = async (rating: number | null) => {
+    const { id } = await params;
+    const { data, error, message } = await addTVShowRating({ id, rating });
     console.log(data, error, message);
   };
 
@@ -223,6 +246,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                           value={userRating}
                           onChange={(e, v) => {
                             setUserRating(v);
+                            toggleRating(v);
                           }}
                           defaultValue={0}
                           precision={0.5}
@@ -236,7 +260,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 </div>
 
                 <br />
-                <p className="mx-20 mt-2">{tvShowData && tvShowData.overview}</p>
+                <p className="mx-20 mt-2">
+                  {tvShowData && tvShowData.overview}
+                </p>
               </div>
             </div>
           )}
