@@ -137,6 +137,38 @@ async function getWatchlistTVShows() {
   }
 }
 
+async function getUserRatedMovies() {
+  try {
+    const response = await instance.get(
+      "/account/21865023/rated/movies?language=en-US&page=1&sort_by=created_at.asc"
+    );
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in getting user rated movies.",
+    };
+  }
+}
+
+async function getUserRatedTVShows() {
+  try {
+    const response = await instance.get(
+      "/account/21865023/rated/tv?language=en-US&page=1&sort_by=created_at.asc"
+    );
+    return { data: response.data };
+  } catch (error) {
+    return {
+      error: true,
+      message: axios.isAxiosError(error)
+        ? error.message
+        : "Error in getting user rated TV Shows.",
+    };
+  }
+}
+
 
 
 export {
@@ -147,4 +179,6 @@ export {
   addToWatchlist,
   getWatchlistMovies,
   getWatchlistTVShows,
+  getUserRatedMovies,
+  getUserRatedTVShows,
 };

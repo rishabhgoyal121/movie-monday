@@ -10,11 +10,20 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import type { MovieDetails, MovieCredit } from "@/interfaces/movies";
-import { fetchMovieDetails, fetchMovieCredits } from "@/api/movies/movies.api";
+import {
+  fetchMovieDetails,
+  fetchMovieCredits,
+  addMovieRating,
+} from "@/api/movies/movies.api";
 import TMBDImage from "@/components/TMBDImage";
 import { Heart, PlusIcon, CheckIcon } from "lucide-react";
-import { addToFavorites, getFavoriteMovies } from "@/api/user/user.api";
-import { addToWatchlist, getWatchlistMovies } from "@/api/user/user.api";
+import {
+  addToFavorites,
+  getFavoriteMovies,
+  addToWatchlist,
+  getWatchlistMovies,
+  getUserRatedMovies,
+} from "@/api/user/user.api";
 import Rating from "@mui/material/Rating";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
@@ -106,6 +115,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         }
       };
       loadWatchlistMovies();
+      const loadUserRatedMovies = async () => {
+        const { data, error, message } = await getUserRatedMovies();
+        console.log(data, error, message);
+        for (let i = 0; i < data.results.length; i++) {
+          if (data.results[i].id == id) {
+            setUserRating(data.results[i].rating);
+          }
+        }
+      };
+      loadUserRatedMovies();
     };
     getProps();
   }, [params]);
@@ -125,6 +144,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       media_id: +id,
       watchlist: i,
     });
+    console.log(data, error, message);
+  };
+
+  const toggleRating = async (rating: number | null) => {
+    const { id } = await params;
+    const { data, error, message } = await addMovieRating({ id, rating });
     console.log(data, error, message);
   };
 
@@ -218,6 +243,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                           value={userRating}
                           onChange={(e, v) => {
                             setUserRating(v);
+                            toggleRating(v);
                           }}
                           defaultValue={0}
                           precision={0.5}
