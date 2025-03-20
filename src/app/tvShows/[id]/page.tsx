@@ -30,7 +30,13 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     null
   );
   const [isFavorite, setIsFavorite] = useState(false);
+  const [isHoveredOnFav, setIsHoveredOnFav] = useState(false);
+  const shouldFillFav = isHoveredOnFav ? !isFavorite : isFavorite;
   const [isInWatchlist, setIsInWatchlist] = useState(false);
+  const [isHoveredOnWatchList, setIsHoveredOnWatchList] = useState(false);
+  const shouldCheckWatchList = isHoveredOnWatchList
+    ? !isInWatchlist
+    : isInWatchlist;
 
   useEffect(() => {
     const getProps = async () => {
@@ -145,13 +151,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <div className="absolute top-20 right-24 flex gap-8">
                     <Heart
                       size={32}
-                      fill={isFavorite ? "red" : ""}
+                      fill={shouldFillFav ? "red" : ""}
                       onClick={() => {
                         setIsFavorite((i) => {
                           toggleFavorite(!i);
                           return !i;
                         });
                       }}
+                      onMouseEnter={() => setIsHoveredOnFav(true)}
+                      onMouseLeave={() => setIsHoveredOnFav(false)}
                     />
                     <div
                       onClick={() => {
@@ -160,8 +168,10 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                           return !i;
                         });
                       }}
+                      onMouseEnter={() => setIsHoveredOnWatchList(true)}
+                      onMouseLeave={() => setIsHoveredOnWatchList(false)}
                     >
-                      {isInWatchlist ? (
+                      {shouldCheckWatchList ? (
                         <CheckIcon size={36} />
                       ) : (
                         <PlusIcon size={36} />
