@@ -161,38 +161,46 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       style={
         tvShowData?.backdrop_path
           ? {
-              backgroundImage: `url(https://image.tmdb.org/t/p/original/${tvShowData?.backdrop_path})`,
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/original/${tvShowData?.backdrop_path})`,
             }
           : {}
       }
-      className="bg-cover bg-center bg-no-repeat h-[100vh] relative top-0 w-full"
+      className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed"
     >
-      <div className="relative bg-[#00000099] h-[100vh] fixed top-0 w-full">
-        <h2 className="mx-4 pt-4 text-lg font-semibold">Movie</h2>
-        {loading && <p>Loading...</p>}
-        <div>
-          <br />
-          {!loading && (
-            <div className="flex text-center mb-4">
-              <div className="w-72 mx-4">
+      <div className="container mx-auto px-4 py-8">
+        {loading && (
+          <div className="flex justify-center items-center min-h-[80vh]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+          </div>
+        )}
+        {!loading && (
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-72 flex-shrink-0">
+              <div className="rounded-lg overflow-hidden shadow-xl">
                 <TMBDImage
                   src={tvShowData?.poster_path}
                   alt={tvShowData?.name ?? ""}
+                  className="w-full h-auto"
                 />
               </div>
-              <div className="w-full">
-                <div className="flex w-full">
-                  <div className="w-[90%]">
-                    <p className=" font-bold text-3xl">
-                      {tvShowData && tvShowData.name}
+            </div>
+            <div className="flex-1">
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+                  <div>
+                    <h1 className="text-4xl font-bold text-white mb-2">
+                      {tvShowData?.name}
+                    </h1>
+                    <p className="text-gray-300 italic text-lg">
+                      {tvShowData?.tagline}
                     </p>
-                    <p className="italic">{tvShowData && tvShowData.tagline}</p>
                   </div>
-                  <div className="flex flex-col gap-4 ml-[-22%]">
-                    <div className="flex gap-8 items-center align-center justify-center">
+                  <div className="flex gap-6 items-center">
+                    <div className="flex flex-col items-center gap-2">
                       <Heart
                         size={32}
                         fill={shouldFillFav ? "red" : ""}
+                        className="cursor-pointer hover:scale-110 transition-transform"
                         onClick={() => {
                           setIsFavorite((i) => {
                             toggleFavorite(!i);
@@ -202,7 +210,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         onMouseEnter={() => setIsHoveredOnFav(true)}
                         onMouseLeave={() => setIsHoveredOnFav(false)}
                       />
+                      <span className="text-sm text-gray-300">Favorite</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
                       <div
+                        className="cursor-pointer hover:scale-110 transition-transform"
                         onClick={() => {
                           setIsInWatchlist((i) => {
                             toggleWatchlist(!i);
@@ -213,99 +225,115 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         onMouseLeave={() => setIsHoveredOnWatchList(false)}
                       >
                         {shouldCheckWatchList ? (
-                          <CheckIcon size={36} />
+                          <CheckIcon size={36} className="text-green-500" />
                         ) : (
-                          <PlusIcon size={36} />
+                          <PlusIcon size={36} className="text-white" />
                         )}
                       </div>
-                    </div>
-                    <div className="flex gap-1">
-                      <div className="flex flex-col gap-2 items-start justify-center w-28">
-                        <p className="text-lg font-semibold flex justify-center">
-                          Rating :{" "}
-                        </p>
-
-                        <p className="text-lg font-semibold flex items-center">
-                          Your Rating :{" "}
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2 items-center justify-center">
-                        <StyledRating
-                          name="avg-rating"
-                          value={tvShowData?.vote_average}
-                          defaultValue={0}
-                          precision={0.5}
-                          max={10}
-                          readOnly
-                          className="w-full"
-                          icon={<StarIcon fontSize="inherit" />}
-                          emptyIcon={<StarBorderIcon fontSize="inherit" />}
-                        />
-                        <StyledRating
-                          name="user-rating"
-                          value={userRating}
-                          onChange={(e, v) => {
-                            setUserRating(v);
-                            toggleRating(v);
-                          }}
-                          defaultValue={0}
-                          precision={0.5}
-                          max={10}
-                          icon={<StarIcon fontSize="inherit" />}
-                          emptyIcon={<StarBorderIcon fontSize="inherit" />}
-                        />
-                      </div>
+                      <span className="text-sm text-gray-300">Watchlist</span>
                     </div>
                   </div>
                 </div>
 
-                <br />
-                <p className="mx-20 mt-2">
-                  {tvShowData && tvShowData.overview}
-                </p>
+                <div className="flex flex-col gap-4 mt-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex flex-col gap-2">
+                      <p className="text-lg font-semibold text-white">Rating</p>
+                      <StyledRating
+                        name="avg-rating"
+                        value={tvShowData?.vote_average}
+                        defaultValue={0}
+                        precision={0.5}
+                        max={10}
+                        readOnly
+                        className="w-full"
+                        icon={<StarIcon fontSize="inherit" />}
+                        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-lg font-semibold text-white">Your Rating</p>
+                      <StyledRating
+                        name="user-rating"
+                        value={userRating}
+                        onChange={(e, v) => {
+                          setUserRating(v);
+                          toggleRating(v);
+                        }}
+                        defaultValue={0}
+                        precision={0.5}
+                        max={10}
+                        icon={<StarIcon fontSize="inherit" />}
+                        emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <h2 className="text-xl font-semibold text-white mb-2">Overview</h2>
+                  <p className="text-gray-300 leading-relaxed">
+                    {tvShowData?.overview}
+                  </p>
+                </div>
               </div>
             </div>
+          </div>
+        )}
+
+        <div className="mt-12">
+          <h2 className="text-2xl font-semibold text-white mb-6">Cast</h2>
+          {loadingCredits && (
+            <div className="flex justify-center items-center h-40">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+            </div>
           )}
-          {error && <p>{error}</p>}
-          <h2 className="ml-12 font-semibold text-lg">Credits</h2>
-          {loadingCredits && <p>Loading...</p>}
           {!loadingCredits && (
             <Carousel
               opts={{
                 align: "start",
               }}
-              className="w-full max-w-[90vw] ml-16 mt-4"
+              className="w-full"
             >
-              <CarouselPrevious />
-              <CarouselContent className="">
-                {tvShowCreditsData &&
-                  tvShowCreditsData.length > 0 &&
-                  tvShowCreditsData.map((actor) => {
-                    return (
-                      <CarouselItem
-                        key={actor.credit_id}
-                        className="md:basis-1/6 lg:basis-1/9"
-                      >
-                        <div className="p-1 h-full">
-                          <Card className="h-full">
-                            <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                              <Link href={`/actors/${actor.id}`}>
-                                <TMBDImage
-                                  src={actor.profile_path}
-                                  alt={actor.name}
-                                />
-                              </Link>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    );
-                  })}
+              <CarouselContent>
+                {tvShowCreditsData?.map((actor) => (
+                  <CarouselItem
+                    key={actor.credit_id}
+                    className="md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
+                  >
+                    <div className="p-2">
+                      <Card className="bg-gray-800 border-gray-700 hover:border-gray-500 transition-colors">
+                        <CardContent className="p-0">
+                          <Link href={`/actors/${actor.id}`}>
+                            <div className="relative aspect-[2/3]">
+                              <TMBDImage
+                                src={actor.profile_path}
+                                alt={actor.name}
+                                className="rounded-t-lg"
+                              />
+                            </div>
+                            <div className="p-3">
+                              <p className="text-white font-medium truncate">
+                                {actor.name}
+                              </p>
+                              <p className="text-gray-400 text-sm truncate">
+                                {actor.character}
+                              </p>
+                            </div>
+                          </Link>
+                        </CardContent>
+                      </Card>
+                    </div>
+                  </CarouselItem>
+                ))}
               </CarouselContent>
-              <CarouselNext />
+              <CarouselPrevious className="hidden md:flex" />
+              <CarouselNext className="hidden md:flex" />
             </Carousel>
           )}
-          {errorCredits && <p>{errorCredits}</p>}
+          {errorCredits && (
+            <p className="text-red-500 text-center mt-4">{errorCredits}</p>
+          )}
         </div>
       </div>
     </div>
