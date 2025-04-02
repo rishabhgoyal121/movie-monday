@@ -158,38 +158,46 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       style={
         movieData?.backdrop_path
           ? {
-              backgroundImage: `url(https://image.tmdb.org/t/p/original/${movieData.backdrop_path})`,
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/original/${movieData.backdrop_path})`,
             }
           : {}
       }
-      className="bg-cover bg-center bg-no-repeat h-[100vh] relative top-0 w-full"
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
     >
-      <div className="relative bg-[#00000099] h-[100vh] fixed top-0 w-full">
-        <h2 className="mx-4 pt-4 text-lg font-semibold">Movie</h2>
-        {loading && <p>Loading...</p>}
+      <div className="container mx-auto px-4 py-8">
+        <h2 className="text-2xl font-bold text-white mb-6">Movie Details</h2>
+        {loading && (
+          <div className="flex justify-center items-center h-64">
+            <p className="text-white text-lg">Loading...</p>
+          </div>
+        )}
         <div>
-          <br />
           {!loading && (
-            <div className="flex text-center mb-4">
-              <div className="w-72 mx-4">
+            <div className="flex flex-col md:flex-row gap-8 text-white">
+              <div className="w-full md:w-72">
                 <TMBDImage
                   src={movieData?.poster_path}
                   alt={movieData?.title ?? ""}
+                  className="rounded-lg shadow-lg"
                 />
               </div>
-              <div className="w-full">
-                <div className="flex w-full">
-                  <div className="w-[90%]">
-                    <p className=" font-bold text-3xl">
+              <div className="flex-1">
+                <div className="flex flex-col md:flex-row gap-6">
+                  <div className="flex-1">
+                    <h1 className="text-4xl font-bold mb-2">
                       {movieData && movieData.title}
+                    </h1>
+                    <p className="text-xl text-gray-300 italic mb-6">
+                      {movieData && movieData.tagline}
                     </p>
-                    <p className="italic">{movieData && movieData.tagline}</p>
+                    <p className="text-lg leading-relaxed mb-8">
+                      {movieData && movieData.overview}
+                    </p>
                   </div>
-                  <div className="flex flex-col gap-4 ml-[-22%]">
-                    <div className="flex gap-8 items-center align-center justify-center">
-                      <Heart
-                        size={32}
-                        fill={shouldFillFav ? "red" : ""}
+                  <div className="flex flex-col gap-6">
+                    <div className="flex gap-6 items-center">
+                      <button
+                        className="p-2 rounded-full hover:bg-red-500/20 transition-colors"
                         onClick={() => {
                           setIsFavorite((i) => {
                             toggleFavorite(!i);
@@ -198,8 +206,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         }}
                         onMouseEnter={() => setIsHoveredOnFav(true)}
                         onMouseLeave={() => setIsHoveredOnFav(false)}
-                      />
-                      <div
+                      >
+                        <Heart
+                          size={32}
+                          fill={shouldFillFav ? "red" : "none"}
+                          stroke={shouldFillFav ? "red" : "white"}
+                          className="transition-colors"
+                        />
+                      </button>
+                      <button
+                        className="p-2 rounded-full hover:bg-green-500/20 transition-colors"
                         onClick={() => {
                           setIsInWatchlist((i) => {
                             toggleWatchlist(!i);
@@ -210,23 +226,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         onMouseLeave={() => setIsHoveredOnWatchList(false)}
                       >
                         {shouldCheckWatchList ? (
-                          <CheckIcon size={36} />
+                          <CheckIcon size={36} className="text-green-500" />
                         ) : (
-                          <PlusIcon size={36} />
+                          <PlusIcon size={36} className="text-white" />
                         )}
-                      </div>
+                      </button>
                     </div>
-                    <div className="flex gap-1">
-                      <div className="flex flex-col gap-2 items-start justify-center w-28">
-                        <p className="text-lg font-semibold flex justify-center">
-                          Rating :{" "}
-                        </p>
-
-                        <p className="text-lg font-semibold flex items-center">
-                          Your Rating :{" "}
-                        </p>
-                      </div>
-                      <div className="flex flex-col gap-2 items-center justify-center">
+                    <div className="flex flex-col gap-4">
+                      <div>
+                        <p className="text-lg font-semibold mb-2">Average Rating</p>
                         <StyledRating
                           name="avg-rating"
                           value={movieData?.vote_average}
@@ -238,6 +246,9 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                           icon={<StarIcon fontSize="inherit" />}
                           emptyIcon={<StarBorderIcon fontSize="inherit" />}
                         />
+                      </div>
+                      <div>
+                        <p className="text-lg font-semibold mb-2">Your Rating</p>
                         <StyledRating
                           name="user-rating"
                           value={userRating}
@@ -255,54 +266,66 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     </div>
                   </div>
                 </div>
-
-                <br />
-                <p className="mx-20 mt-2">{movieData && movieData.overview}</p>
               </div>
             </div>
           )}
-          {error && <p>{error}</p>}
-          <h2 className="ml-12 font-semibold text-lg">Credits</h2>
-          {loadingCredits && <p>Loading...</p>}
-          {!loadingCredits && (
-            <Carousel
-              opts={{
-                align: "start",
-              }}
-              className="w-full max-w-[90vw] ml-16 mt-4"
-            >
-              <CarouselPrevious />
-              <CarouselContent className="">
-                {movieCreditsData &&
-                  movieCreditsData.length > 0 &&
-                  movieCreditsData.map((actor) => {
-                    return (
+          {error && (
+            <div className="bg-red-500/20 p-4 rounded-lg text-white mt-4">
+              <p>{error}</p>
+            </div>
+          )}
+          
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold text-white mb-6">Cast</h2>
+            {loadingCredits && (
+              <div className="flex justify-center items-center h-32">
+                <p className="text-white text-lg">Loading cast...</p>
+              </div>
+            )}
+            {!loadingCredits && (
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {movieCreditsData &&
+                    movieCreditsData.length > 0 &&
+                    movieCreditsData.map((actor) => (
                       <CarouselItem
                         key={actor.credit_id}
                         className="md:basis-1/6 lg:basis-1/9"
                       >
                         <div className="p-1 h-full">
-                          <Card className="h-full">
-                            <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                          <Card className="h-full bg-white/10 border-none">
+                            <CardContent className="flex aspect-square items-center justify-center p-0">
                               <Link href={`/actors/${actor.id}`}>
                                 <TMBDImage
                                   src={actor.profile_path}
                                   alt={actor.name}
+                                  className="rounded-lg"
                                 />
                               </Link>
                             </CardContent>
                           </Card>
                         </div>
                       </CarouselItem>
-                    );
-                  })}
-              </CarouselContent>
-              <CarouselNext />
-            </Carousel>
-          )}
-          {errorCredits && <p>{errorCredits}</p>}
+                    ))}
+                </CarouselContent>
+                <CarouselPrevious className="text-white hover:text-gray-300" />
+                <CarouselNext className="text-white hover:text-gray-300" />
+              </Carousel>
+            )}
+            {errorCredits && (
+              <div className="bg-red-500/20 p-4 rounded-lg text-white mt-4">
+                <p>{errorCredits}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
   );
 }
+

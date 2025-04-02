@@ -3,9 +3,10 @@ import Image from "next/image";
 interface TMBDImageProps {
   src: string | null | undefined;
   alt: string;
+  className?: string;
 }
 
-export default function TMBDImage({ src, alt = "" }: TMBDImageProps) {
+export default function TMBDImage({ src, alt = "", className = "" }: TMBDImageProps) {
   if (src) {
     return (
       <>
@@ -15,7 +16,7 @@ export default function TMBDImage({ src, alt = "" }: TMBDImageProps) {
           height={160}
           width={90}
           layout="responsive"
-          className="rounded-xl"
+          className={`rounded-xl ${className}`}
         />
       </>
     );
