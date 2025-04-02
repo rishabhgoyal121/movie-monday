@@ -57,27 +57,27 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
-      <div className="flex items-center py-4 mt-12">
+    <div className="space-y-4 max-w-7xl mx-auto px-4">
+      <div className="flex items-center py-4">
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-sm border-gray-300 focus:border-blue-500 focus:ring-blue-500"
         />
       </div>
-      <div className="rounded-md border">
+      <div className="rounded-lg border shadow-sm overflow-x-auto">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id} >
+              <TableRow key={headerGroup.id} className="bg-gray-50">
                 {headerGroup.headers.map((header) => {
                   return (
                     <TableHead
                       key={header.id}
-                      className="text-lg font-semibold"
+                      className="text-lg font-semibold text-gray-700 whitespace-nowrap"
                     >
                       {header.isPlaceholder
                         ? null
@@ -97,9 +97,10 @@ export function DataTable<TData, TValue>({
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
+                  className="hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-gray-800 dark:hover:text-gray-100 transition-colors"
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className="py-4">
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
@@ -112,9 +113,9 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-gray-500"
                 >
-                  No results.
+                  No results found.
                 </TableCell>
               </TableRow>
             )}
@@ -127,6 +128,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="border-gray-300 hover:bg-gray-50"
         >
           Previous
         </Button>
@@ -135,6 +137,7 @@ export function DataTable<TData, TValue>({
           size="sm"
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="border-gray-300 hover:bg-gray-50"
         >
           Next
         </Button>
