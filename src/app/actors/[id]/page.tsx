@@ -41,6 +41,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [errorTVShowCredits, setErrorTVShowCredits] = useState<
     string | null | undefined
   >(null);
+  const [showFullBio, setShowFullBio] = useState(false);
 
   useEffect(() => {
     const getProps = async () => {
@@ -88,6 +89,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     getProps();
   }, [params]);
 
+  const getShortenedBio = (bio: string) => {
+    const words = bio.split(' ');
+    if (words.length <= 100) return bio;
+    return words.slice(0, 100).join(' ') + '...';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
       <div className="container mx-auto px-4 py-8">
@@ -123,9 +130,23 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   )}
                 </div>
                 <div className="prose prose-invert max-w-none">
-                  <p className="text-lg leading-relaxed">
-                    {actorData?.biography}
-                  </p>
+                  <div className="max-h-[400px] overflow-y-auto pr-4">
+                    <p className="text-lg leading-relaxed">
+                      {actorData?.biography ? (
+                        <>
+                          {showFullBio ? actorData.biography : getShortenedBio(actorData.biography)}
+                          {actorData.biography.split(' ').length > 100 && (
+                            <button
+                              onClick={() => setShowFullBio(!showFullBio)}
+                              className="ml-2 text-blue-400 hover:text-blue-300 transition-colors"
+                            >
+                              {showFullBio ? 'Show Less' : 'Read More'}
+                            </button>
+                          )}
+                        </>
+                      ) : 'No biography available'}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
