@@ -20,7 +20,7 @@ export default function TVShowCarousel({
       opts={{
         align: "start",
       }}
-      className="w-full max-w-[90vw] ml-16 mt-4"
+      className="w-full max-w-[95vw] ml-16 mt-4"
     >
       <CarouselPrevious />
       <CarouselContent className="">
