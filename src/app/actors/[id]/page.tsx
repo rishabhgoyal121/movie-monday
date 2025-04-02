@@ -89,117 +89,164 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   }, [params]);
 
   return (
-    <>
-      <h2 className="mx-4 pt-4 text-lg font-semibold">Actor</h2>
-      {loading && <p>Loading...</p>}
-      {!loading && (
-        <div className="flex text-center mb-4">
-          <div className="w-72 mx-4 flex items-center">
-            <TMBDImage
-              src={actorData?.profile_path}
-              alt={actorData?.name ?? ""}
-            />
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <div className="container mx-auto px-4 py-8">
+        {loading && (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
           </div>
-
-          <div className=" text-center w-full">
-            <div>
-              <p className=" font-bold text-3xl">
-                {actorData && actorData.name}
-              </p>
-              <p className="italic">
-                {actorData && actorData.birthday} -{" "}
-                {actorData && actorData.deathday}
-              </p>
+        )}
+        {!loading && (
+          <div className="flex flex-col md:flex-row gap-8 mb-12">
+            <div className="w-full md:w-72 flex-shrink-0">
+              <div className="rounded-lg overflow-hidden shadow-xl">
+                <TMBDImage
+                  src={actorData?.profile_path}
+                  alt={actorData?.name ?? ""}
+                  className="w-full h-auto"
+                />
+              </div>
             </div>
 
-            <br />
-            <p className="mx-20 mt-2">{actorData && actorData.biography}</p>
+            <div className="flex-1">
+              <div className="space-y-4">
+                <h1 className="text-4xl font-bold tracking-tight">
+                  {actorData?.name}
+                </h1>
+                <div className="flex items-center gap-2 text-gray-300">
+                  <span>{actorData?.birthday}</span>
+                  {actorData?.deathday && (
+                    <>
+                      <span>•</span>
+                      <span>{actorData.deathday}</span>
+                    </>
+                  )}
+                </div>
+                <div className="prose prose-invert max-w-none">
+                  <p className="text-lg leading-relaxed">
+                    {actorData?.biography}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
-      {error && <p>{error}</p>}
-      {movieCredits && movieCredits.length > 0 && (
-        <h2 className="ml-12 font-semibold text-lg">Actor Credits</h2>
-      )}
-      {loadingMovieCredits && <p>Loading...</p>}
-      {movieCredits && movieCredits.length > 0 && (
-        <Carousel
-          opts={{
-            align: "start",
-          }}
-          className="w-full max-w-[90vw] ml-16 mt-4"
-        >
-          <CarouselPrevious />
-          <CarouselContent className="">
-            {movieCredits &&
-              movieCredits.length > 0 &&
-              movieCredits.map((movie) => {
-                return (
-                  <CarouselItem
-                    key={movie.credit_id}
-                    className="md:basis-1/6 lg:basis-1/9"
-                  >
-                    <div className="p-1">
-                      <Card>
-                        <Link href={`/movies/${movie.id}`}>
-                          <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                            <TMBDImage
-                              src={movie.poster_path}
-                              alt={movie.title}
-                            />
-                          </CardContent>
-                        </Link>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                );
-              })}
-          </CarouselContent>
-          <CarouselNext />
-        </Carousel>
-      )}
-      {errorMovieCredits && <p>{errorMovieCredits}</p>}
-      {TVShowCredits && TVShowCredits.length > 0 && (
-        <h2 className="ml-12 font-semibold text-lg">TV Show Credits</h2>
-      )}
-      {loadingTVShowCredits && <p>Loading...</p>}
-      {TVShowCredits && TVShowCredits.length > 0 && (
-        <Carousel
-          opts={{
-            align: "start",
-          }}
-          className="w-full max-w-[90vw] ml-16 mt-4"
-        >
-          <CarouselPrevious />
-          <CarouselContent className="">
-            {TVShowCredits &&
-              TVShowCredits.length > 0 &&
-              TVShowCredits.map((tvShow) => {
-                return (
-                  <CarouselItem
-                    key={tvShow.credit_id}
-                    className="md:basis-1/6 lg:basis-1/9"
-                  >
-                    <div className="p-1">
-                      <Card>
-                        <Link href={`/tvShows/${tvShow.id}`}>
-                          <CardContent className="flex aspect-square items-center justify-center p-0 ">
-                            <TMBDImage
-                              src={tvShow.poster_path}
-                              alt={tvShow.name}
-                            />
-                          </CardContent>
-                        </Link>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                );
-              })}
-          </CarouselContent>
-          <CarouselNext />
-        </Carousel>
-      )}
-      {errorTVShowCredits && <p>{errorTVShowCredits}</p>}
-    </>
+        )}
+        {error && (
+          <div className="bg-red-500/10 border border-red-500 rounded-lg p-4 text-red-500">
+            {error}
+          </div>
+        )}
+
+        {movieCredits && movieCredits.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6">Movie Credits</h2>
+            {loadingMovieCredits ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {movieCredits.map((movie) => (
+                    <CarouselItem
+                      key={movie.credit_id}
+                      className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <div className="p-2">
+                        <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+                          <Link href={`/movies/${movie.id}`}>
+                            <CardContent className="p-0">
+                              <div className="relative aspect-[2/3]">
+                                <TMBDImage
+                                  src={movie.poster_path}
+                                  alt={movie.title}
+                                  className="rounded-t-lg"
+                                />
+                                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <p className="text-white text-center px-2 font-medium">
+                                    {movie.title}
+                                  </p>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Link>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
+            )}
+          </div>
+        )}
+        {errorMovieCredits && (
+          <div className="bg-red-500/10 border border-red-500 rounded-lg p-4 text-red-500 mb-8">
+            {errorMovieCredits}
+          </div>
+        )}
+
+        {TVShowCredits && TVShowCredits.length > 0 && (
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6">TV Show Credits</h2>
+            {loadingTVShowCredits ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
+              </div>
+            ) : (
+              <Carousel
+                opts={{
+                  align: "start",
+                }}
+                className="w-full"
+              >
+                <CarouselContent>
+                  {TVShowCredits.map((tvShow) => (
+                    <CarouselItem
+                      key={tvShow.credit_id}
+                      className="md:basis-1/3 lg:basis-1/4 xl:basis-1/5"
+                    >
+                      <div className="p-2">
+                        <Card className="bg-gray-800 border-gray-700 hover:border-gray-600 transition-colors">
+                          <Link href={`/tvShows/${tvShow.id}`}>
+                            <CardContent className="p-0">
+                              <div className="relative aspect-[2/3]">
+                                <TMBDImage
+                                  src={tvShow.poster_path}
+                                  alt={tvShow.name}
+                                  className="rounded-t-lg"
+                                />
+                                <div className="absolute inset-0 bg-black/50 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                                  <p className="text-white text-center px-2 font-medium">
+                                    {tvShow.name}
+                                  </p>
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Link>
+                        </Card>
+                      </div>
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious className="hidden md:flex" />
+                <CarouselNext className="hidden md:flex" />
+              </Carousel>
+            )}
+          </div>
+        )}
+        {errorTVShowCredits && (
+          <div className="bg-red-500/10 border border-red-500 rounded-lg p-4 text-red-500">
+            {errorTVShowCredits}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
