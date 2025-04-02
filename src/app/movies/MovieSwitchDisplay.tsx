@@ -86,37 +86,41 @@ export default function MovieSwitchDisplay({
 
   return (
     <>
-      {loading && <p>Loading...</p>}
+      {loading && (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      )}
       {!loading && (
         <div className="flex flex-col">
-          <div className="flex items-center px-2 h-12 font-semibold border w-[20vw]">
-            <span>Cards mode</span>
+          <div className="flex items-center justify-center gap-4 p-4 bg-gray-800 rounded-lg shadow-lg mb-6">
+            <span className="text-gray-300">Cards mode</span>
             <Switch
               checked={isListDisplayModeEnabled}
               onCheckedChange={() => {
                 setIsListDisplayModeEnabled(!isListDisplayModeEnabled);
               }}
               name="List display"
-              className="mx-2"
+              className="data-[state=checked]:bg-blue-500"
             />
-            <span>List mode</span>
+            <span className="text-gray-300">List mode</span>
           </div>
-          <div className="grid grid-cols-[1fr_4fr]">
+          <div className="grid grid-cols-[1fr_4fr] gap-6">
             <div
               className={`${
                 isListDisplayModeEnabled
-                  ? "p-2 w-[20vw]"
-                  : "border p-2 w-[20vw]"
+                  ? "p-4 w-[20vw]"
+                  : "border border-gray-700 p-4 w-[20vw] rounded-lg bg-gray-800 shadow-lg"
               }`}
             >
               {!isListDisplayModeEnabled && (
                 <div>
-                  <p className="text-lg underline font-semibold">Filters</p>
-                  <Accordion type="single" collapsible>
-                    <AccordionItem value="rating">
-                      <AccordionTrigger>Minimum Rating?</AccordionTrigger>
+                  <p className="text-xl font-semibold mb-4 text-blue-400">Filters</p>
+                  <Accordion type="single" collapsible className="bg-gray-800 rounded-lg">
+                    <AccordionItem value="rating" className="border-gray-700">
+                      <AccordionTrigger className="text-gray-300 hover:text-white">Minimum Rating?</AccordionTrigger>
                       <AccordionContent>
-                        <div className="flex flex-col">
+                        <div className="flex flex-col p-4">
                           <Slider
                             defaultValue={[0]}
                             max={10}
@@ -128,23 +132,25 @@ export default function MovieSwitchDisplay({
                               });
                             }}
                           />
-                          <span className="mx-auto text-lg">
+                          <span className="mx-auto text-lg text-blue-400 font-semibold">
                             {filters.vote_average}
                           </span>
                         </div>
                       </AccordionContent>
                     </AccordionItem>
-                    <AccordionItem value="release-date">
-                      <AccordionTrigger>Release Date?</AccordionTrigger>
+                    <AccordionItem value="release-date" className="border-gray-700">
+                      <AccordionTrigger className="text-gray-300 hover:text-white">Release Date?</AccordionTrigger>
                       <AccordionContent>
-                        <DatePickerWithRange
-                          date={filters.release_date}
-                          setDate={(d) => {
-                            setFilters((f) => {
-                              return { ...f, release_date: d };
-                            });
-                          }}
-                        />
+                        <div className="p-4">
+                          <DatePickerWithRange
+                            date={filters.release_date}
+                            setDate={(d) => {
+                              setFilters((f) => {
+                                return { ...f, release_date: d };
+                              });
+                            }}
+                          />
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
                   </Accordion>
@@ -154,18 +160,18 @@ export default function MovieSwitchDisplay({
 
             <div>
               {isListDisplayModeEnabled ? (
-                <div className="mt-[-6.6rem] px-4 w-[80vw] max-w-250 font-semibold">
+                <div className="px-4 w-full">
                   <DataTable columns={columns} data={movies} />
                 </div>
               ) : (
-                <div className="flex px-2 flex-wrap mx-8 gap-8">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-4">
                   {filteredMovies &&
                     filteredMovies.length > 0 &&
                     filteredMovies?.map((movie) => {
                       return (
-                        <Card key={movie.id} className="w-44">
+                        <Card key={movie.id} className="w-full bg-gray-800 border-gray-700 hover:border-blue-500 transition-all duration-300">
                           <Link href={`/movies/${movie.id}`}>
-                            <CardContent className="flex aspect-square items-center justify-center p-0 ">
+                            <CardContent className="flex aspect-square items-center justify-center p-0 group">
                               {movie.poster_path ? (
                                 <Image
                                   src={`https://image.tmdb.org/t/p/original${movie.poster_path}`}
@@ -173,10 +179,10 @@ export default function MovieSwitchDisplay({
                                   height={160}
                                   width={90}
                                   layout="responsive"
-                                  className="rounded-xl"
+                                  className="rounded-xl group-hover:scale-105 transition-transform duration-300"
                                 />
                               ) : (
-                                <p className="text-center font-semibold">
+                                <p className="text-center font-semibold text-gray-300">
                                   {movie.title}
                                 </p>
                               )}
@@ -191,7 +197,11 @@ export default function MovieSwitchDisplay({
           </div>
         </div>
       )}
-      {error && <p>{error}</p>}
+      {error && (
+        <div className="text-red-500 text-center p-4 bg-red-100 rounded-lg">
+          {error}
+        </div>
+      )}
     </>
   );
 }
