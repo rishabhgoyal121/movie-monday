@@ -126,42 +126,42 @@ export default function Page() {
         <div className="space-y-12">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Favorite Movies</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <MovieCarousel movieList={favMovies} />
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Favorite TV Shows</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <TVShowCarousel tvShowList={favTVShows} />
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Watchlist Movies</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <MovieCarousel movieList={watchlistMovies} />
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Watchlist TV Shows</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <TVShowCarousel tvShowList={watchlistTVShows} />
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Rated Movies</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <MovieCarousel movieList={userRatedMovies} />
             </div>
           </div>
 
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm dark:shadow-gray-700/50 p-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">My Rated TV Shows</h2>
-            <div className="w-full max-w-full">
+            <div className="w-11/12 mx-auto">
               <TVShowCarousel tvShowList={userRatedTVShows} />
             </div>
           </div>
