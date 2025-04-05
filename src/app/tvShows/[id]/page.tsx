@@ -161,51 +161,49 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       style={
         tvShowData?.backdrop_path
           ? {
-              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url(https://image.tmdb.org/t/p/original/${tvShowData?.backdrop_path})`,
+              backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.9)), url(https://image.tmdb.org/t/p/original/${tvShowData?.backdrop_path})`,
+              backgroundAttachment: 'fixed',
+              backgroundSize: 'cover',
             }
           : {}
       }
-      className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed"
+      className="min-h-screen bg-cover bg-center bg-no-repeat relative"
     >
-      <div className="container mx-auto px-4 py-8">
-        {error && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-            <span className="block sm:inline">{error}</span>
-          </div>
-        )}
+      <div className="container mx-auto px-4 py-12">
         {loading && (
-          <div className="flex justify-center items-center min-h-[80vh]">
+          <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
           </div>
         )}
-        {!loading && (
-          <div className="flex flex-col md:flex-row gap-8">
-            <div className="w-full md:w-72 flex-shrink-0">
-              <div className="rounded-lg overflow-hidden shadow-xl">
+        <div>
+          {!loading && (
+            <div className="flex flex-col md:flex-row gap-12 text-white">
+              <div className="w-full md:w-80">
                 <TMBDImage
                   src={tvShowData?.poster_path}
                   alt={tvShowData?.name ?? ""}
-                  className="w-full h-auto"
+                  className="rounded-xl shadow-2xl transform hover:scale-105 transition-transform duration-300"
                 />
               </div>
-            </div>
-            <div className="flex-1">
-              <div className="flex flex-col gap-4">
-                <div className="flex flex-col md:flex-row justify-between items-start gap-4">
-                  <div>
-                    <h1 className="text-4xl font-bold text-white mb-2">
-                      {tvShowData?.name}
+              <div className="flex-1">
+                <div className="flex flex-col md:flex-row gap-12">
+                  <div className="flex-1">
+                    <h1 className="text-5xl font-bold mb-4 tracking-tight">
+                      {tvShowData && tvShowData.name}
                     </h1>
-                    <p className="text-gray-300 italic text-lg">
-                      {tvShowData?.tagline}
+                    <p className="text-xl text-gray-300 italic mb-8">
+                      {tvShowData && tvShowData.tagline}
                     </p>
+                    <div className="bg-white/10 rounded-xl p-8 mb-8 backdrop-blur-sm">
+                      <p className="text-lg leading-relaxed">
+                        {tvShowData && tvShowData.overview}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-6 items-center">
-                    <div className="flex flex-col items-center gap-2">
-                      <Heart
-                        size={32}
-                        fill={shouldFillFav ? "red" : ""}
-                        className="cursor-pointer hover:scale-110 transition-transform"
+                  <div className="flex flex-col gap-8">
+                    <div className="flex gap-6 items-center">
+                      <button
+                        className="p-3 rounded-full hover:bg-red-500/30 transition-colors duration-300 transform hover:scale-110"
                         onClick={() => {
                           setIsFavorite((i) => {
                             toggleFavorite(!i);
@@ -214,12 +212,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         }}
                         onMouseEnter={() => setIsHoveredOnFav(true)}
                         onMouseLeave={() => setIsHoveredOnFav(false)}
-                      />
-                      <span className="text-sm text-gray-300">Favorite</span>
-                    </div>
-                    <div className="flex flex-col items-center gap-2">
-                      <div
-                        className="cursor-pointer hover:scale-110 transition-transform"
+                      >
+                        <Heart
+                          size={36}
+                          fill={shouldFillFav ? "red" : "none"}
+                          stroke={shouldFillFav ? "red" : "white"}
+                          className="transition-colors duration-300"
+                        />
+                      </button>
+                      <button
+                        className="p-3 rounded-full hover:bg-green-500/30 transition-colors duration-300 transform hover:scale-110"
                         onClick={() => {
                           setIsInWatchlist((i) => {
                             toggleWatchlist(!i);
@@ -230,115 +232,117 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                         onMouseLeave={() => setIsHoveredOnWatchList(false)}
                       >
                         {shouldCheckWatchList ? (
-                          <CheckIcon size={36} className="text-green-500" />
+                          <CheckIcon size={40} className="text-green-500" />
                         ) : (
-                          <PlusIcon size={36} className="text-white" />
+                          <PlusIcon size={40} className="text-white" />
                         )}
+                      </button>
+                    </div>
+                    <div className="bg-white/10 rounded-xl p-8 backdrop-blur-sm">
+                      <div className="flex flex-col gap-6">
+                        <div>
+                          <p className="text-lg font-semibold mb-3">Average Rating</p>
+                          <StyledRating
+                            name="avg-rating"
+                            value={tvShowData?.vote_average}
+                            defaultValue={0}
+                            precision={0.5}
+                            max={10}
+                            readOnly
+                            className="w-full"
+                            icon={<StarIcon fontSize="large" />}
+                            emptyIcon={<StarBorderIcon fontSize="large" />}
+                          />
+                        </div>
+                        <div>
+                          <p className="text-lg font-semibold mb-3">Your Rating</p>
+                          <StyledRating
+                            name="user-rating"
+                            value={userRating}
+                            onChange={(e, v) => {
+                              setUserRating(v);
+                              toggleRating(v);
+                            }}
+                            defaultValue={0}
+                            precision={0.5}
+                            max={10}
+                            icon={<StarIcon fontSize="large" />}
+                            emptyIcon={<StarBorderIcon fontSize="large" />}
+                          />
+                        </div>
                       </div>
-                      <span className="text-sm text-gray-300">Watchlist</span>
                     </div>
                   </div>
-                </div>
-
-                <div className="flex flex-col gap-4 mt-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex flex-col gap-2">
-                      <p className="text-lg font-semibold text-white">Rating</p>
-                      <StyledRating
-                        name="avg-rating"
-                        value={tvShowData?.vote_average}
-                        defaultValue={0}
-                        precision={0.5}
-                        max={10}
-                        readOnly
-                        className="w-full"
-                        icon={<StarIcon fontSize="inherit" />}
-                        emptyIcon={<StarBorderIcon fontSize="inherit" />}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-2">
-                      <p className="text-lg font-semibold text-white">Your Rating</p>
-                      <StyledRating
-                        name="user-rating"
-                        value={userRating}
-                        onChange={(e, v) => {
-                          setUserRating(v);
-                          toggleRating(v);
-                        }}
-                        defaultValue={0}
-                        precision={0.5}
-                        max={10}
-                        icon={<StarIcon fontSize="inherit" />}
-                        emptyIcon={<StarBorderIcon fontSize="inherit" />}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-6">
-                  <h2 className="text-xl font-semibold text-white mb-2">Overview</h2>
-                  <p className="text-gray-300 leading-relaxed">
-                    {tvShowData?.overview}
-                  </p>
                 </div>
               </div>
             </div>
-          </div>
-        )}
-
-        <div className="mt-12">
-          <h2 className="text-2xl font-semibold text-white mb-6">Cast</h2>
-          {loadingCredits && (
-            <div className="flex justify-center items-center h-40">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+          )}
+          {error && (
+            <div className="bg-red-500/30 p-6 rounded-xl text-white mt-8 backdrop-blur-sm">
+              <p className="text-lg">{error}</p>
             </div>
           )}
-          {!loadingCredits && (
-            <Carousel
-              opts={{
-                align: "start",
-              }}
-              className="w-full"
-            >
-              <CarouselContent>
-                {tvShowCreditsData?.map((actor) => (
-                  <CarouselItem
-                    key={actor.credit_id}
-                    className="md:basis-1/3 lg:basis-1/4 xl:basis-1/6"
-                  >
-                    <div className="p-2">
-                      <Card className="bg-gray-800 border-gray-700 hover:border-gray-500 transition-colors">
-                        <CardContent className="p-0">
-                          <Link href={`/actors/${actor.id}`}>
-                            <div className="relative aspect-[2/3]">
-                              <TMBDImage
-                                src={actor.profile_path}
-                                alt={actor.name}
-                                className="rounded-t-lg"
-                              />
-                            </div>
-                            <div className="p-3">
-                              <p className="text-white font-medium truncate">
-                                {actor.name}
-                              </p>
-                              <p className="text-gray-400 text-sm truncate">
-                                {actor.character}
-                              </p>
-                            </div>
-                          </Link>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="hidden md:flex" />
-              <CarouselNext className="hidden md:flex" />
-            </Carousel>
-          )}
-          {errorCredits && (
-            <p className="text-red-500 text-center mt-4">{errorCredits}</p>
-          )}
+          
+          <div className="mt-16">
+            <h2 className="text-3xl font-bold text-white mb-8">Cast</h2>
+            {loadingCredits && (
+              <div className="flex justify-center items-center h-32">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+              </div>
+            )}
+            {!loadingCredits && (
+              <div className="h-fit">
+                <Carousel
+                  opts={{
+                    align: "center",
+                  }}
+                  className="w-full mx-4"
+                >
+                  <CarouselContent className="-ml-2 md:mx-8 overflow-x-hidden">
+                    {tvShowCreditsData &&
+                      tvShowCreditsData.length > 0 &&
+                      tvShowCreditsData.map((actor) => (
+                        <CarouselItem
+                          key={actor.credit_id}
+                          className="pl-2 md:pl-4 basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 xl:basis-1/6"
+                        >
+                          <div className="p-1">
+                            <Card className="bg-white/10 border-none backdrop-blur-sm hover:bg-white/20 transition-all duration-300 group">
+                              <CardContent className="p-0 relative overflow-hidden">
+                                <Link href={`/actors/${actor.id}`} className="block aspect-[2/3] w-full">
+                                  <TMBDImage
+                                    src={actor.profile_path}
+                                    alt={actor.name}
+                                    className="rounded-lg w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                                      <h3 className="text-white font-semibold text-lg mb-1 truncate">
+                                        {actor.name}
+                                      </h3>
+                                      <p className="text-gray-300 text-sm truncate">
+                                        {actor.character}
+                                      </p>
+                                    </div>
+                                  </div>
+                                </Link>
+                              </CardContent>
+                            </Card>
+                          </div>
+                        </CarouselItem>
+                      ))}
+                  </CarouselContent>
+                  <CarouselPrevious className="text-white hover:text-gray-300 bg-white/10 hover:bg-white/20 transition-colors duration-300 -left-4" />
+                  <CarouselNext className="text-white hover:text-gray-300 bg-white/10 hover:bg-white/20 transition-colors duration-300 -right-4" />
+                </Carousel>
+              </div>
+            )}
+            {errorCredits && (
+              <div className="bg-red-500/30 p-6 rounded-xl text-white mt-8 backdrop-blur-sm">
+                <p className="text-lg">{errorCredits}</p>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </div>
