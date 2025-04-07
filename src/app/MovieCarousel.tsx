@@ -15,6 +15,14 @@ export default function MovieCarousel({
 }: {
   movieList: Movie[] | null | undefined;
 }) {
+  if (!movieList || movieList.length === 0) {
+    return (
+      <div className="w-full max-w-[85vw] mx-auto mt-4 text-center p-8">
+        <p className="text-gray-500">No movies available to display</p>
+      </div>
+    );
+  }
+
   return (
     <Carousel
       opts={{
@@ -24,26 +32,24 @@ export default function MovieCarousel({
     >
       <CarouselPrevious />
       <CarouselContent className="w-full">
-        {movieList &&
-          movieList.length > 0 &&
-          movieList.map((movie) => {
-            return (
-              <CarouselItem
-                key={movie.id}
-                className="md:basis-1/6 lg:basis-1/9 w-full"
-              >
-                <div className="p-1">
-                  <Card className=" w-full">
-                    <Link href={`/movies/${movie.id}`} className=" w-full">
-                      <CardContent className="flex aspect-square items-center justify-center p-0 w-full">
-                        <TMBDImage src={movie.poster_path} alt={movie.title} />
-                      </CardContent>
-                    </Link>
-                  </Card>
-                </div>
-              </CarouselItem>
-            );
-          })}
+        {movieList.map((movie) => {
+          return (
+            <CarouselItem
+              key={movie.id}
+              className="md:basis-1/6 lg:basis-1/9 w-full"
+            >
+              <div className="p-1">
+                <Card className=" w-full">
+                  <Link href={`/movies/${movie.id}`} className=" w-full">
+                    <CardContent className="flex aspect-square items-center justify-center p-0 w-full">
+                      <TMBDImage src={movie.poster_path} alt={movie.title} />
+                    </CardContent>
+                  </Link>
+                </Card>
+              </div>
+            </CarouselItem>
+          );
+        })}
       </CarouselContent>
       <CarouselNext />
     </Carousel>
